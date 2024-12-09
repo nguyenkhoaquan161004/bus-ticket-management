@@ -1,0 +1,185 @@
+.blur1 {
+    position: absolute;
+    width: 1440px;
+    height: 286px;
+    left: 0px;
+    top: 205px;
+    background: linear-gradient(179.66deg, rgba(255, 255, 255, 0) 0.3%, #FFFFFF 99.72%);
+
+    z-index: 1;
+}
+
+.buyTickerContainer img {
+    margin-top: 164px;
+    width: 774px;
+    height: 327px;
+}
+
+.buyTickerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    justify-content: center;
+    margin: 0 30px;
+    align-items: center;
+}
+
+.buyTicketSpace {
+    display: flex;
+    flex-direction: column;
+    gap: 38px;
+}
+
+/* PROMOTION */
+.promotionContainer {
+    margin-top: 200px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin: 0 30px;
+}
+
+.promotionText {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.listOfPromotions img {
+    width: 312px;
+    height: 208px;
+}
+
+.listOfPromotions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 36px;
+    gap: 20px;
+    filter: drop-shadow(0px 0px 20px rgba(0, 0, 0, 0.25));
+}
+
+/* DETAIL */
+.contentContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+}
+
+.contentSpace img {
+    width: 665px;
+    height: 500px;
+}
+
+.listOfContent {
+    display: flex;
+    flex-direction: column;
+    gap: 38px;
+}
+
+.contentSpace {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+}
+
+.detailContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    align-items: center;
+    margin: 0 30px;
+    margin-top: 200px;
+}
+
+/* CONTACT WITH US */
+.contactContainer .line {
+    width: 80%;
+    height: 0;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    align-self: center;
+}
+
+.inputBasic {
+    height: 72px;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 150%;
+    padding: 0 20px;
+}
+
+.itemInput {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.nameAndNumber {
+    display: flex;
+    justify-content: space-between;
+    gap: 148px
+}
+
+.itemInputAndButton {
+    display: flex;
+    flex-direction: column;
+    gap: 38px;
+    width: 100%;
+    align-items: flex-end;
+}
+
+.explantInput {
+    padding: 15px 20px;
+    height: 122px;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 150%;
+} 
+
+.itemExplantInput {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.itemInputAndButton button {
+    padding: 17px 51px;
+    background-color: #D7987D;
+    color: #fff;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.contactFlexBox {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    max-width: 796px;
+}
+
+.inputFillContainer {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.contactContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+}

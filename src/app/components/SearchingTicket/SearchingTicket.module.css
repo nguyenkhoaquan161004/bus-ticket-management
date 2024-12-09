@@ -1,0 +1,130 @@
+.searchingTicketSpace {
+    margin-top: 240px;
+    position: relative;
+    z-index: 2;
+}
+
+.inputFill {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    width: 1106px;
+    height: 72px;
+    border-radius: 12px;
+    padding: 0 20px;
+    outline: none;
+}
+
+.inputFill:focus {
+    border: 2px solid #D7987D;
+}
+
+.inputFillContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.inputTicketFill {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    align-items: center;
+}
+
+.infoInputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    align-items: center;
+}
+
+.infoInputContainer button {
+    padding: 20px 59px;
+    border-radius: 68px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 3px solid #D7987D;
+    color: #D7987D;
+}
+
+.infoInputContainer button:hover {
+    background-color: #D7987D;
+    color: #fff;
+    cursor: pointer;
+}
+
+.graMain {
+    position: absolute;
+    width: 789px;
+    height: 508px;
+    left: -68px;
+    top: 318px;
+
+    background: conic-gradient(from 180deg at 50% 50%, #FFFFFF -60.57deg, #FFFFFF 7.7deg, #92C3BE 126.1deg, #F9DED4 249.34deg, #FFFFFF 299.43deg, #FFFFFF 367.7deg);
+    filter: blur(100px);
+
+    z-index: 1;
+}
+
+/* RESEARCH RESULT */
+.topicField {
+    width: 213px;
+    text-align: left;
+}
+
+.contentField {
+    width: 270px;
+    text-align: right;
+}
+
+.infoField {
+    display: flex;
+    gap: 318px;
+}
+
+.resultItem {
+    padding: 20px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    width: fit-content;
+}
+
+.buttonField button {
+    width: 131px;
+    height: 49px;
+    border: none;
+    color: #fff;
+    border-radius: 100px;
+}
+
+.buttonField {
+    display: flex;
+    gap: 22px;
+}
+
+.resultItemContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-end;
+    justify-self: center;
+}
+
+.resultList {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    margin: 40px 0;
+    align-items: center;
+    height: 500px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.researchResultContainer {
+    position: relative;
+    z-index: 2;
+}

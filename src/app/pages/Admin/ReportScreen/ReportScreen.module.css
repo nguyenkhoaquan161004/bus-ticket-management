@@ -1,0 +1,81 @@
+.mainContainer h2 {
+    margin-top: 220px;
+}
+
+.mainContainer button {
+    position: fixed;
+    top: 200px;
+    left: 137px;
+    background-color: transparent;
+    border: none;
+}
+
+.mainContainer .icon {
+    width: 32px;
+    height: 32px;
+}
+
+.inputLocation,
+.inputTime {
+    height: 60px;
+    width: 100%;
+    border: 1px solid #D7987D;
+    border-radius: 5px;
+    outline: none;
+    padding-left: 20px;
+}
+
+.inputSelectionContainer button {
+    padding: 14px 24px;
+    height: fit-content;
+    position: static;
+    background-color: #D7987D;
+    color: #fff;
+    border-radius: 100px;
+    cursor: pointer;
+}
+
+.inputLocationContainer {
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    align-items: flex-start;
+}
+
+.inputSelectionContainer {
+    width: 100%;
+    display: flex;
+    gap: 40px;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    margin-top: 100px;
+}
+
+.GenaralContainer .exportFileButton {
+    border: 4px solid #92C3BE;
+    width: fit-content;
+    padding: 17px 25px;
+    border-radius: 10px;
+    color: #2E6B75;
+    position: static;
+}
+
+.exportFileButton:hover {
+    background-color: #92C3BE;
+    color: #fff;
+    cursor: pointer;
+}
+
+.GenaralContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    width: fit-content;
+    justify-self: center;
+}
+
+.reportTableContainer {
+    align-items: center;
+    display: inline-block;
+    margin-top: 50px;
+}

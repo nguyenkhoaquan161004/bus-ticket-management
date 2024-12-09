@@ -1,0 +1,127 @@
+/* ANOTHER */
+.mainContainer {
+    margin-top: 59px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.detailItem {
+    display: flex;
+    justify-content: space-between;
+    width: 412px;
+}
+
+.detailContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.inforTicket,
+.confirmInforTicket {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+    padding: 32px 35px;
+
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+}
+
+.inforTicketContainer {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    height: 711px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.mainContainer button {
+    padding: 20px 60px;
+    border-radius: 5px;
+    width: fit-content;
+    color: #fff;
+    background-color: #2E6B75;
+    box-sizing: content-box;
+}
+
+.mainSpaceContainer {
+    display: flex;
+    margin: 0 30px;
+    justify-content: space-between;
+}
+
+.btnFlexBox {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 30px;
+}
+
+/* BOX CONFIRM TICKET */
+
+.confirmTicket {
+    width: fit-content;
+    z-index: 3;
+}
+
+.confirmTicketSpace {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.confirmInforTicket {
+    background-color: #fff;
+}
+
+.confirmTicketContainer {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    gap: 48px;
+    align-items: center;
+    padding: 49px 87px;
+    border-radius: 20px;
+    height: 560px;
+    overflow-x: hidden;
+}
+
+.btnCancel {
+    background-color: #fff;
+    color: #92C3BE;
+    border: 1px solid #92C3BE;
+    padding: 16px 38px;
+    border-radius: 15px;
+}
+
+.btnConfirm {
+    background-color: #92C3BE;
+    color: #fff;
+    padding: 16px 38px;
+    border-radius: 15px;
+}
+
+.confirmTicketButton {
+    display: flex;
+    gap: 31px;
+}
+
+.confirmTicket {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    align-items: center;
+}

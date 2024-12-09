@@ -1,0 +1,48 @@
+.loginContainer {
+    margin-top: 232px;
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+    align-items: center;
+}
+
+.loginContainer .fillInput {
+    font-family: 'Open Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 150%;
+    padding: 0 20px;
+    height: 72px;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+
+}
+
+.loginFlexBox {
+    min-width: 300px;
+    width: 917px;
+    display: flex;
+    flex-direction: column;
+    gap: 43px;
+}
+
+.loginFlexBox .fillSpace {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.contentContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.loginContainer > button {
+    background-color: #2E6B75;
+    color: #fff;
+    padding: 16px 64px;
+    border-radius: 40px;
+}
