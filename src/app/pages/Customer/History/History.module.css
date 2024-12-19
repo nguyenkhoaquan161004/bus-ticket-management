@@ -1,0 +1,150 @@
+.mainContainer {
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 100px;
+    align-items: center;
+}
+
+.mainContainer h4 {
+    position: relative;
+    justify-self: center;
+}
+
+/* USER INFORMATIONS SPACE */
+.mainContainer .userInforSpace {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+}
+
+.mainContainer .inputItem,
+.mainContainer .inputPasswordItem {
+    justify-self: center;
+    width: 912px;
+}
+
+.mainContainer .inputDoubleItem {
+    width: 936px;
+    justify-self: center;
+}
+
+.mainContainer .inputDoubleItem {
+    display: flex;
+    gap: 40px;
+    justify-content: space-between;
+    width: fit-content;
+}
+
+.mainContainer .inputDoubleItem .inputGender {
+    height: fit-content;
+}
+
+.mainContainer .inputName,
+.mainContainer .inputGender,
+.mainContainer .inputItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+}
+
+.mainContainer .fillInputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: fit-content;
+    justify-self: center;
+    border: 3px solid #D7987D;
+    border-radius: 20px;
+    padding: 24px 28px;
+}
+
+.contentDetail {
+    width: 300px;
+    text-align: right;
+}
+
+.mainDetail {
+    width: 168px;
+}
+
+.mainContainer .buttonSignUp {
+    padding: 20px 57px;
+    background-color: #2E6B75;
+    border-radius: 100px;
+    position: static;
+}
+
+.mainContainer .buttonSignUp h4 {
+    padding: 0;
+    margin: 0;
+    color: #fff;
+}
+
+/* HISTORY SPACE */
+.topicField {
+    width: 213px;
+    text-align: left;
+}
+
+.contentField {
+    width: 270px;
+    text-align: right;
+}
+
+.infoField {
+    display: flex;
+    gap: 318px;
+}
+
+.resultItem {
+    padding: 20px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    width: fit-content;
+}
+
+.cancelBtn {
+    background-color: #D24F4F;
+    padding: 8px 24px;
+    border-radius: 50px;
+    color: #fff;
+}
+
+.resultItemContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-end;
+    justify-self: center;
+    margin-bottom: 40px;
+}
+
+.resultList {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    margin: 40px 0;
+    align-items: center;
+    height: 500px;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.researchResultContainer {
+    position: relative;
+    z-index: 2;
+}
+
+.historySpace {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+    
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import HeaderNotLoggedIn from "../layouts/Header/NotLoggedIn/Header";
 import HeaderCustomer from "../layouts/Header/Customer/Header";
@@ -8,6 +8,7 @@ import HeaderAdmin from "../layouts/Header/Admin/Header";
 import Footer from "../layouts/Footer";
 import PageNotFound from "../layouts/PageNotFound";
 import { TicketProvider } from "../modules/TicketContext";
+import { EmployeeContext, EmployeeProvider } from "../modules/EmployeeContext";
 
 import NotLoggedInChooseSeatOneWay from "../pages/NotLoggedIn/ChooseSeatOneWay";
 import NotLoggedInChooseSeatRoundTrip from "../pages/NotLoggedIn/ChooseSeatRoundTrip";
@@ -21,6 +22,7 @@ import CustomerChooseSeatOneWay from "../pages/Customer/ChooseSeatOneWay";
 import CustomerChooseSeatRoundTrip from "../pages/Customer/ChooseSeatRoundTrip";
 import CustomerFillInforOneWay from "../pages/Customer/FillInfor";
 import CustomerSearchTicket from "../pages/Customer/SearchTicket";
+import CustomerHistory from "../pages/Customer/History";
 
 function Header() {
   const location = useLocation();
@@ -31,32 +33,47 @@ function Header() {
     return <HeaderNotLoggedIn />;
   }
 }
+
+function EmployeeHandler() {
+  const location = useLocation();
+  const { toggleEmployee } = useContext(EmployeeContext);
+
+  useEffect(() => {
+    if (location.pathname.includes("/employee")) {
+      toggleEmployee();
+    }
+  }, [location.pathname, toggleEmployee]);
+  // Không render gì cả, chỉ để theo dõi và thay đổi trạng thái
+}
 export default function MainRoutes() {
   return (
-    <TicketProvider>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          {/* NOT LOGGED IN */}
-          <Route path="/" element={<StartScreen />} />
-          <Route path="/notLoggedIn/ChooseSeatOneWay" element={<NotLoggedInChooseSeatOneWay />} />
-          <Route path="/notLoggedIn/ChooseSeatRoundTrip" element={<NotLoggedInChooseSeatRoundTrip />} />
-          <Route path="/notLoggedIn/FillInfor" element={<NotLoggedInFillInforOneWay />} />
-          <Route path="/notLoggedIn/SearchTicket" element={<NotLoggedInSearchTicket />} />
-          <Route path="/SignUp" element={<SignUp />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="*" element={<PageNotFound />} />
+    <EmployeeProvider>
+      <TicketProvider>
+        <BrowserRouter>
+          <EmployeeHandler />
+          <Header />
+          <Routes>
+            {/* NOT LOGGED IN */}
+            <Route path="/" element={<StartScreen />} />
+            <Route path="/notLoggedIn/ChooseSeatOneWay" element={<NotLoggedInChooseSeatOneWay />} />
+            <Route path="/notLoggedIn/ChooseSeatRoundTrip" element={<NotLoggedInChooseSeatRoundTrip />} />
+            <Route path="/notLoggedIn/FillInfor" element={<NotLoggedInFillInforOneWay />} />
+            <Route path="/notLoggedIn/SearchTicket" element={<NotLoggedInSearchTicket />} />
+            <Route path="/SignUp" element={<SignUp />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="*" element={<PageNotFound />} />
 
-          {/* CUSTOMER */}
-          <Route path="/Customer" element={<StartScreen />} />
-          <Route path="/customer/ChooseSeatOneWay" element={<CustomerChooseSeatOneWay />} />
-          <Route path="/customer/ChooseSeatRoundTrip" element={<CustomerChooseSeatRoundTrip />} />
-          <Route path="/customer/FillInfor" element={<CustomerFillInforOneWay />} />
-          <Route path="/customer/SearchTicket" element={<CustomerSearchTicket />} />
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </TicketProvider>
-
+            {/* CUSTOMER */}
+            <Route path="/Customer" element={<StartScreen />} />
+            <Route path="/customer/ChooseSeatOneWay" element={<CustomerChooseSeatOneWay />} />
+            <Route path="/customer/ChooseSeatRoundTrip" element={<CustomerChooseSeatRoundTrip />} />
+            <Route path="/customer/FillInfor" element={<CustomerFillInforOneWay />} />
+            <Route path="/customer/SearchTicket" element={<CustomerSearchTicket />} />
+            <Route path="/customer/History" element={<CustomerHistory />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </TicketProvider>
+    </EmployeeProvider>
   );
 }
