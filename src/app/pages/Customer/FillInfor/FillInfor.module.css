@@ -62,7 +62,7 @@
     gap: 30px;
 }
     /* PAYMENT INFOR SPACE */
-.paymentInforSpace {
+.paymentInforSpaceContainer .paymentInforSpace {
     display: flex;
     width: 100%;
     gap: 20px;
@@ -171,4 +171,150 @@
     box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
     justify-content: space-between;
+}
+
+/* PAYMENT BOX */
+.paymentBoxBackground {
+    position: fixed;
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.paymentBoxContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    padding: 47px 30px;
+    background-color: #fff;
+    border-radius: 20px;
+}
+
+.menthodPayment input {
+    width: 25px;
+    height: 25px;
+}
+
+.menthodPayment label {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.listOfMethods {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menthodPayment {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.costTicketInfor .costItem p {
+    width: 270px;
+    text-align: right;
+}
+
+.costTicketInfor .costItem {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+}
+
+.costTicketInfor hr {
+    width: 75%;
+}
+
+.mainCostTicketInfor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.costTicketInfor {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+}
+
+.mainTotalCostTicket .totalCostInfor {
+    width: 270px;
+    text-align: right;
+}
+
+.mainCostTicketInfor .costItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mainTotalCostTicket {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.costTicketInforFlexbox {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.totalCostTicketInfor {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.paymentBoxContainer .paymentInforSpace {
+    display: flex;
+    flex-direction: column;
+    gap: 31px;
+}
+
+.cancelBtn {
+    background-color: #fff;
+    color: #92C3BE;
+    border: 1px solid #92C3BE;
+    padding: 16px 38px;
+    border-radius: 15px;
+}
+
+.payBtn {
+    background-color: #92C3BE;
+    color: #fff;
+    padding: 16px 38px;
+    border-radius: 15px;
+}
+
+.listOfBtns {
+    display: flex;
+    gap: 31px;
+}
+
+.paymentInforFlexbox {
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+    align-items: center;
+}
+
+.paymentBoxContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    align-items: center;
 }

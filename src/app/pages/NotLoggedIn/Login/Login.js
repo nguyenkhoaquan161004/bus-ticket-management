@@ -2,8 +2,11 @@ import React from 'react';
 import styles from "./Login.module.css";
 import { InlineIcon } from '@iconify/react/dist/iconify.js';
 import ButtonBack from '../../../components/ButtonBack/ButtonBack';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+    const nav = useNavigate();
+
     return (
         <div className={styles.loginContainer}>
             <ButtonBack></ButtonBack>
@@ -30,7 +33,7 @@ const Login = () => {
                         className='p3'>Quên mật khẩu?</p>
                 </button>
             </div>
-            <button >
+            <button onClick={() => nav("/customer")}>
                 <h4>Đăng nhập</h4>
             </button>
 

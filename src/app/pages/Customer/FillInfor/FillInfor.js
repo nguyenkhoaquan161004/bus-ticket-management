@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import styles from "./FillInforOneWay.module.css"
+import styles from "./FillInfor.module.css";
 import ButtonBack from '../../../components/ButtonBack/ButtonBack';
 import clsx from 'clsx';
 
@@ -19,18 +19,27 @@ const promotionDatas = [
     promotion(6, "Giảm giá 5% cho khách hàng thân thiết", 5)
 ]
 
-const FillInforOneWay = () => {
+const FillInfor = () => {
     const { isRoundTrip } = useContext(TicketContext);
     const [discountPercent, setDiscountPercent] = useState(0);
     const [selectedPromotion, setSelectedPromotion] = useState();
     const [isChecked, setIsChecked] = useState(false);
+    const [isPaymentBoxOpen, setIsPaymentBoxOpen] = useState(false);
 
     const location = useLocation();
     const nav = useNavigate();
 
-    const costTicket = location.state?.costTicket;
+    const costTicketOutbound = location.state?.costTicketOutbound;
+    const costTicketReturn = location.state?.costTicketReturn;
+    const sumOfCost = costTicketOutbound + costTicketReturn;
     const locationFromTo = location.state?.location;
-    const totalCost = useMemo(() => costTicket - discountPercent / 100 * costTicket, [discountPercent, costTicket]);
+    const totalCost = useMemo(() => {
+        if (isRoundTrip !== true) {
+            return costTicketOutbound - discountPercent / 100 * costTicketOutbound;
+        } else {
+            return sumOfCost - discountPercent / 100 * sumOfCost;
+        }
+    }, [isRoundTrip, discountPercent, costTicketOutbound, costTicketReturn]);
 
     const handleSelectedPromotion = (e) => {
         const selectedId = parseInt(e.target.value); // Lấy `id` của khuyến mãi được chọn
@@ -52,11 +61,19 @@ const FillInforOneWay = () => {
 
     const handlePayButton = () => {
         if (isChecked) {
-
+            handleOpenPaymentBox();
         } else {
             alert("Vui lòng xác nhận chấp nhận điều khoản và quy định trước khi thanh toán.");
             return;
         }
+    }
+
+    const handleOpenPaymentBox = () => {
+        setIsPaymentBoxOpen(true);
+    }
+
+    const handleClosePaymentBox = () => {
+        setIsPaymentBoxOpen(false);
     }
 
     return (
@@ -117,12 +134,12 @@ const FillInforOneWay = () => {
                                 <div className={styles.listDetails}>
                                     <div className={styles.itemDetails}>
                                         <h5>Giá lượt đi:</h5>
-                                        <p className='uiRegular'>{costTicket}VND</p>
+                                        <p className='uiRegular'>{costTicketOutbound}VND</p>
                                     </div>
                                     {isRoundTrip && (
                                         <div className={styles.itemDetails}>
                                             <h5>Giá lượt về:</h5>
-                                            <p className='uiRegular'>250000VND</p>
+                                            <p className='uiRegular'>{costTicketReturn}VND</p>
                                         </div>
                                     )}
                                     <div className={styles.itemDetails}>
@@ -163,8 +180,74 @@ const FillInforOneWay = () => {
                     </div>
                 </div>
             </div>
+            {/* PAYMENT BOX */}
+            {isPaymentBoxOpen && (
+                <div
+                    className={styles.paymentBoxBackground}
+                    onClick={handleClosePaymentBox}>
+                    <div
+                        className={styles.paymentBoxContainer}
+                        onClick={(e) => e.stopPropagation()}>
+                        <h4>THÔNG TIN THANH TOÁN</h4>
+                        <div className={styles.paymentInforFlexbox}>
+                            <div className={styles.paymentInforSpace}>
+                                <div className={styles.menthodPayment}>
+                                    <p className='uiSemibold'>Phương thức thanh toán</p>
+                                    <div className={styles.listOfMethods}>
+                                        <label className='p3'>
+                                            <input
+                                                type='radio'
+                                                name='menthod'
+                                            ></input>
+                                            VNPay
+                                        </label>
+                                        <label className='p3'>
+                                            <input
+                                                type='radio'
+                                                name='menthod'></input>
+                                            Momo
+                                        </label>
+                                    </div>
+                                </div>
+                                <div className={styles.costTicketInforFlexbox}>
+                                    <hr></hr>
+                                    <div className={styles.mainCostTicketInfor}>
+                                        <div className={styles.costItem}>
+                                            <h4>Giá vé:</h4>
+                                            <p className='p2'>{sumOfCost}VND</p>
+                                        </div>
+                                        <div className={styles.costItem}>
+                                            <h4>Giảm giá:</h4>
+                                            <p className='p2'>{discountPercent}%</p>
+                                        </div>
+                                    </div>
+                                    <hr></hr>
+                                </div>
+                                <div className={styles.totalCostTicketInfor}>
+                                    <div className={styles.mainTotalCostTicket}>
+                                        <h4>Thành tiền: </h4>
+                                        <h4
+                                            className={styles.totalCostInfor}
+                                            style={{ color: "#D7987D" }}>{totalCost}VND</h4>
+                                    </div>
+                                    <p3
+                                        className='p3'
+                                        style={{ color: "#E82127" }}>Khách hàng phải thanh toán trước khi xe khởi hành</p3>
+                                </div>
+                            </div>
+                            <div className={styles.listOfBtns}>
+                                <button
+                                    className={styles.cancelBtn}
+                                    onClick={handleClosePaymentBox}><h4>Hủy</h4></button>
+                                <button className={styles.payBtn}><h4>Thanh toán</h4></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };
 
-export default FillInforOneWay;
+export default FillInfor;

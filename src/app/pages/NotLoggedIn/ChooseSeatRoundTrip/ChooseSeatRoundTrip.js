@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './ChooseSeatRoundTrip.module.css'
 import ButtonBack from '../../../components/ButtonBack/ButtonBack';
 import SeatRows from '../ChooseSeatOneWay/SeatRows';
@@ -18,6 +18,9 @@ const ChooseSeatRoundTrip = () => {
     const handleOpenConfirmBox = () => {
         setIsConfirmBoxOpen(true);
     }
+
+    const costTicketOutbound = useMemo(() => selectedTrip.cost * selectedSeatsOutbound.length, [selectedTrip.cost, selectedSeatsOutbound]);
+    const costTicketReturn = useMemo(() => selectedTrip.cost * selectedSeatsReturn.length, [selectedTrip.cost, selectedSeatsReturn]);
 
     const handleCloseConfirmBox = () => {
         setIsConfirmBoxOpen(false);
@@ -178,7 +181,10 @@ const ChooseSeatRoundTrip = () => {
                                 <button className={styles.btnCancel} onClick={handleCloseConfirmBox}>
                                     <h4>Hủy</h4>
                                 </button>
-                                <button className={styles.btnConfirm} onClick={() => nav("/notLoggedIn/FillInforRoundTrip")}>
+                                <button className={styles.btnConfirm}
+                                    onClick={() => nav("/notLoggedIn/FillInfor",
+                                        { state: { costTicketOutbound: costTicketOutbound, costTicketReturn: costTicketReturn, location: `${selectedTrip.locationFrom} - ${selectedTrip.locationTo}` } }
+                                    )}>
                                     <h4>Xác nhận</h4>
                                 </button>
                             </div>
