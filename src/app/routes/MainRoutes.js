@@ -24,6 +24,14 @@ import CustomerFillInforOneWay from "../pages/Customer/FillInfor";
 import CustomerSearchTicket from "../pages/Customer/SearchTicket";
 import CustomerHistory from "../pages/Customer/History";
 
+import AdminBusManagement from "../pages/Admin/BusManagement";
+import AdminReportScreen from "../pages/Admin/ReportScreen";
+import AdminChangeInforTicket from "../pages/Admin/ChangeInforTicket";
+import AdminDiscountManagement from "../pages/Admin/DiscountManagement";
+import AdminManagerAccount from "../pages/Admin/ManagerAccount";
+import AdminRouteSearching from "../pages/Admin/RouteSearching";
+import ManagerAccount from "../pages/Admin/ManagerAccount";
+
 function Header() {
   const location = useLocation();
 
@@ -64,12 +72,24 @@ export default function MainRoutes() {
             <Route path="*" element={<PageNotFound />} />
 
             {/* CUSTOMER */}
-            <Route path="/Customer" element={<StartScreen />} />
+            <Route path="/customer" element={<StartScreen />} />
             <Route path="/customer/ChooseSeatOneWay" element={<CustomerChooseSeatOneWay />} />
             <Route path="/customer/ChooseSeatRoundTrip" element={<CustomerChooseSeatRoundTrip />} />
             <Route path="/customer/FillInfor" element={<CustomerFillInforOneWay />} />
             <Route path="/customer/SearchTicket" element={<CustomerSearchTicket />} />
             <Route path="/customer/History" element={<CustomerHistory />} />
+
+            {/* EMPLOYEE */}
+
+            {/* ADMIN */}
+            <Route path="/admin" element={<ManagerAccount />} />
+            <Route path="/admin/busManagement" element={<AdminBusManagement />} />
+            <Route path="/admin/reportScreen" element={<AdminReportScreen />} />
+            <Route path="/admin/changeInforTicket" element={<AdminChangeInforTicket />} />
+            <Route path="/admin/discountManagement" element={<AdminDiscountManagement />} />
+            <Route path="/admin/managerAccount" element={<AdminManagerAccount />} />
+            <Route path="/admin/routeSearching" element={<AdminRouteSearching />} />
+
           </Routes>
           <Footer />
         </BrowserRouter>

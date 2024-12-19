@@ -39,21 +39,13 @@ const ReportScreen = () => {
     return (
         <div>
             <div className={styles.mainContainer}>
-                <h2>BÁO CÁO</h2>
+                <h2 style={{ textAlign: "center" }}>BÁO CÁO</h2>
                 <button>
                     <InlineIcon icon="ic:round-arrow-back-ios" className={styles.icon}></InlineIcon>
                 </button>
                 {/* INPUT SELECTION */}
                 <div className={styles.GenaralContainer}>
                     <div className={styles.inputSelectionContainer}>
-                        <div className={styles.inputLocationContainer}>
-                            <p className='uiSemibold'>Điểm đi</p>
-                            <input type="text" className={styles.inputLocation}></input>
-                        </div>
-                        <div className={styles.inputLocationContainer}>
-                            <p className='uiSemibold'>Điểm đến</p>
-                            <input type="text" className={styles.inputLocation}></input>
-                        </div>
                         <div className={styles.inputLocationContainer}>
                             <p className='uiSemibold'>Từ ngày</p>
                             <input type="date" className={styles.inputTime}></input>

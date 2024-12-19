@@ -6,6 +6,7 @@
 .mainTopic {
     padding-top: 220px;
     position: relative;
+    text-align: center;
 }
 
 .searchButton {
@@ -164,4 +165,17 @@
     color: #fff;
     border-radius: 10px;
     margin: 30px 0;
+}
+
+.mainFlexbox {
+    width: fit-content;
+    justify-self: center;
+}
+
+.mainFlexboxContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-self: center;
+    width: fit-content;
 }
