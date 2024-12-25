@@ -37,6 +37,8 @@ function Header() {
 
   if (location.pathname.includes("/customer")) {
     return <HeaderCustomer />;
+  } else if (location.pathname.includes("/admin")) {
+    return <HeaderAdmin />;
   } else {
     return <HeaderNotLoggedIn />;
   }

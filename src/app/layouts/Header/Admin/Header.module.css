@@ -1,0 +1,77 @@
+.headerContainer {
+    position: fixed;
+    width: 100vw;
+    height: 120px;
+    left: 0px;
+    top: 0px;
+    z-index: 5;
+
+    background: linear-gradient(180deg, #92C3BE 0%, #92C3BE 38.5%, rgba(146, 195, 190, 0) 100%);
+    backdrop-filter: blur(25px);
+}
+
+.headerFlexBox nav button,
+.generalButton .btnLogin {
+    border: none;
+    background-color: transparent;
+    ;
+}
+
+.logoAndNav nav {
+    display: flex;
+    gap: 60px;
+}
+
+.logoAndNav {
+    display: flex;
+    gap: 54px;
+    align-items: center;
+}
+
+.generalButton button {
+    border: none;
+}
+
+.btnSignUp {
+    padding: 10px 12px;
+    border-radius: 200px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.generalButton {
+    display: flex;
+    gap: 23px;
+}
+
+.profileIcon {
+    width: 24px;
+    height: 24px;
+}
+
+.headerFlexBox {
+    display: flex;
+    gap: 149px;
+    justify-content: center;
+    margin-top: 26px;
+}
+
+/* MANGEMENT OPTIONS */
+.navManagerBtns {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+}
+
+.itemBtn {
+    text-align: left;
+    padding: 16px 20px;
+    width: 350px;
+    background-color: rgb(255, 255, 255) !important;
+    color: #000000;
+    border: 1px solid rgb(188, 188, 188) !important;
+}
+
+.itemBtn:hover {
+    background-color: #92C3BE !important;
+    border: none !important;
+}

@@ -82,7 +82,7 @@ const RouteSearching = () => {
     return (
         <div>
             <div className={styles.mainContainer}>
-                <h1>TUYẾN TRÌNH</h1>
+                <h1 style={{ textAlign: "center" }}>TUYẾN TRÌNH</h1>
                 <button className={styles.buttonBack}>
                     <InlineIcon icon="ic:round-arrow-back-ios" className={styles.icon}></InlineIcon>
                 </button>

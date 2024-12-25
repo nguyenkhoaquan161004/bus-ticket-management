@@ -45,7 +45,7 @@
 .inputSelectionContainer {
     width: 100%;
     display: flex;
-    gap: 40px;
+    gap: 80px;
     align-items: flex-end;
     justify-content: space-evenly;
     margin-top: 100px;
@@ -53,6 +53,7 @@
 
 .GenaralContainer .exportFileButton {
     border: 4px solid #92C3BE;
+    background-color: #fff;
     width: fit-content;
     padding: 17px 25px;
     border-radius: 10px;
@@ -78,4 +79,6 @@
     align-items: center;
     display: inline-block;
     margin-top: 50px;
+    display: flex;
+    justify-content: center;
 }
