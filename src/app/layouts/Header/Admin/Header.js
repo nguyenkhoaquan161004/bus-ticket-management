@@ -30,13 +30,10 @@ export default function Header() {
                 <button className={styles.itemBtn} onClick={() => nav("/admin/managerAccount")}>
                   <p className="uiSemibold">QUẢN LÝ TÀI KHOẢN</p>
                 </button>
-                <button className={styles.itemBtn} onClick={() => nav("/admin/changeInforTicket")}>
-                  <p className="uiSemibold">QUẢN LÝ THÔNG TIN VÉ</p>
-                </button>
                 <button className={styles.itemBtn} onClick={() => nav("/admin/discountManagement")}>
                   <p className="uiSemibold">QUẢN LÝ KHUYẾN MÃI</p>
                 </button>
-                <button className={styles.itemBtn} onClick={() => nav("/admin/routeSearching")}>
+                <button className={styles.itemBtn} onClick={() => nav("/admin/routeManager")}>
                   <p className="uiSemibold">QUẢN LÝ TUYẾN TRÌNH</p>
                 </button>
                 <button className={styles.itemBtn} onClick={() => nav("/admin/busManagement")}>
@@ -51,8 +48,7 @@ export default function Header() {
       </div>
       <div className={styles.generalButton}>
         <button
-          className={styles.btnSignUp}
-          onClick={() => nav("/customer/History")}>
+          className={styles.btnSignUp}>
           <InlineIcon icon="iconamoon:profile-fill" className={styles.profileIcon}></InlineIcon>
         </button>
         <button

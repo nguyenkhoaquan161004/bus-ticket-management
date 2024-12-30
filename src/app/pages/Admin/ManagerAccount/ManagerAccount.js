@@ -8,6 +8,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import AddAccount from './AddAccount';
 import UpdateAccount from './UpdateAccount';
+import rows from '../../../assets/AccountInfor';
 
 
 const columns = [
@@ -17,99 +18,9 @@ const columns = [
     { field: 'role', headerName: 'Chức vụ', width: 168 },
     { field: 'phone', type: 'numeber', headerName: 'Số điện thoại', width: 212 },
     { field: 'email', headerName: 'Email', width: 300 },
-];
-
-const rows = [
-
-    {
-        id: "123456789",
-        fullname: "Nguyễn Văn A",
-        sex: "Nam",
-        role: "Nhân viên",
-        phone: "0901234567",
-        email: "nguyenvana@example.com"
-    },
-
-    {
-        id: "987654321",
-        fullname: "Trần Thị B",
-        sex: "Nữ",
-        role: "Khách hàng",
-        phone: "0912345678",
-        email: "tranthib@example.com"
-    },
-
-    {
-        id: "456789123",
-        fullname: "Lê Văn C",
-        sex: "Nam",
-        role: "Nhân viên",
-        phone: "0923456789",
-        email: "levanc@example.com"
-    },
-
-    {
-        id: "654321987",
-        fullname: "Phạm Thị D",
-        sex: "Nữ",
-        role: "Khách hàng",
-        phone: "0934567890",
-        email: "phamthid@example.com"
-    },
-
-    {
-        id: "234567891",
-        fullname: "Hoàng Văn E",
-        sex: "Nam",
-        role: "Nhân viên",
-        phone: "0945678901",
-        email: "hoangvane@example.com"
-    },
-
-    {
-        id: "345678912",
-        fullname: "Đặng Thị F",
-        sex: "Nữ",
-        role: "Khách hàng",
-        phone: "0956789012",
-        email: "dangthif@example.com"
-    },
-
-    {
-        id: "456789213",
-        fullname: "Ngô Văn G",
-        sex: "Nam",
-        role: "Nhân viên",
-        phone: "0967890123",
-        email: "ngovang@example.com"
-    },
-
-    {
-        id: "567891234",
-        fullname: "Đỗ Thị H",
-        sex: "Nữ",
-        role: "Khách hàng",
-        phone: "0978901234",
-        email: "dothih@example.com"
-    },
-
-    {
-        id: "678912345",
-        fullname: "Bùi Văn I",
-        sex: "Nam",
-        role: "Nhân viên",
-        phone: "0989012345",
-        email: "buivani@example.com"
-    },
-
-    {
-        id: "789123456",
-        fullname: "Phan Thị J",
-        sex: "Nữ",
-        role: "Khách hàng",
-        phone: "0990123456",
-        email: "phanthij@example.com"
-    }
+    { field: 'password', type: 'numeber', headerName: 'Mật khẩu', width: 212 },
+    { field: 'status', headerName: 'Trạng thái', width: 160 },
+    { field: 'note', headerName: 'Ghi chú', width: 232 }
 ];
 
 const paginationModel = { page: 0, pageSize: 10 };
@@ -120,6 +31,10 @@ const ManagerAccount = () => {
 
     const [selectedValue, setSelectedValue] = useState("all");
 
+    const [fillteredRows, setFilteredRows] = useState(rows);
+    const [selectedRowId, setSelectedRowId] = useState('');
+    const [selectedRowIds, setSelectedRowIds] = useState([]);
+
     const handleAddAccountButtonCLick = () => {
         setIsAddAccountOpen(true);
     }
@@ -129,6 +44,10 @@ const ManagerAccount = () => {
     }
 
     const handleOpenUpdateAccountButtonClick = () => {
+        if (!selectedRowId) {
+            alert('Vui lòng chọn một tài khoản để cập nhật.');
+            return;
+        }
         setIsUpdateAccountOpen(true);
     }
 
@@ -137,8 +56,70 @@ const ManagerAccount = () => {
     }
 
     const handleRadioChange = (event) => {
-        setSelectedValue(event.target.value);
+        const value = event.target.value;
+        setSelectedValue(value);
+
+        if (value === "all") {
+            // Hiển thị tất cả các hàng
+            setFilteredRows(rows);
+        } else if (value === "Customer") {
+            // Lọc danh sách để chỉ hiển thị "Khách hàng"
+            setFilteredRows(rows.filter(row => row.role === "Khách hàng"));
+        } else if (value === "Employee") {
+            // Lọc danh sách để chỉ hiển thị "Nhân viên"
+            setFilteredRows(rows.filter(row => row.role === "Nhân viên"));
+        }
     };
+
+
+    const addNewAccount = (newAccount) => {
+        setFilteredRows((prevRows) => [...prevRows, newAccount]);
+        alert('Tài khoản mới được thêm thành công.');
+    }
+
+    const handleSelectionChange = (selection) => {
+        if (selection.length === 1) {
+            const selectedRow = fillteredRows.find((row) => row.id === selection[0]);
+            setSelectedRowId(selectedRow);
+        } else {
+            setSelectedRowId(null);
+        }
+
+        setSelectedRowIds(selection);
+    };
+
+    const updateAccount = (updateFullName, updateSex, updatePhone, updateEmail, updatePassword, updateStatus, updateNote) => {
+        setFilteredRows((prevRows) =>
+            prevRows.map((row) =>
+                row.id === selectedRowId.id ? {
+                    ...row,
+                    fullname: updateFullName,
+                    sex: updateSex,
+                    phone: updatePhone,
+                    email: updateEmail,
+                    password: updatePassword,
+                    status: updateStatus,
+                    note: updateNote,
+                } : row
+            )
+        );
+        alert('Cập nhật tài khoản thành công.');
+    };
+
+    const handleDeleteAccount = () => {
+        if (selectedRowIds.length === 0) {
+            alert('Vui lòng chọn ít nhất một tài khoản để xóa.');
+            return;
+        }
+
+        const isConfirmed = window.confirm("Bạn có chắc muốn xóa tài khoản này không?");
+        if (isConfirmed) {
+            setFilteredRows((prevRows) =>
+                prevRows.filter((row) => !selectedRowIds.includes(row.id)));
+        };
+        setSelectedRowIds([]);
+        alert("Tài khoản đã xóa thành công.")
+    }
 
     return (
         <div>
@@ -190,7 +171,7 @@ const ManagerAccount = () => {
                             <InlineIcon className={styles.icon} icon="ic:round-add" onClick={handleAddAccountButtonCLick}></InlineIcon>
                         </button>
                         <button className={styles.deleteButton}>
-                            <InlineIcon className={styles.icon} icon="pepicons-pop:line-x"></InlineIcon>
+                            <InlineIcon className={styles.icon} icon="pepicons-pop:line-x" onClick={handleDeleteAccount}></InlineIcon>
                         </button>
                         <button className={styles.updateButton}>
                             <InlineIcon className={styles.icon} icon="bxs:pencil" onClick={handleOpenUpdateAccountButtonClick}></InlineIcon>
@@ -200,11 +181,12 @@ const ManagerAccount = () => {
 
                 <Paper sx={{ height: "646px", width: "fitContent", margin: "0 30px", marginTop: "67px", overflowY: "hidden" }}>
                     <DataGrid
-                        rows={rows}
+                        rows={fillteredRows}
                         columns={columns}
                         initialState={{ pagination: { paginationModel } }}
                         pageSizeOptions={[10, 20]}
                         checkboxSelection
+                        onRowSelectionModelChange={handleSelectionChange}
                         sx={{
                             border: 0,
                             "& .MuiDataGrid-columnHeaders": {
@@ -224,11 +206,20 @@ const ManagerAccount = () => {
                 </Paper>
             </div>
             {isAddAccountOpen && (
-                <AddAccount isOpen={isAddAccountOpen} onClose={handleCloseAddAccountButtonClick}></AddAccount>
+                <AddAccount
+                    isOpen={isAddAccountOpen}
+                    onClose={handleCloseAddAccountButtonClick}
+                    onAddAccount={addNewAccount}
+                ></AddAccount>
             )}
 
             {isUpdateAccountOpen && (
-                <UpdateAccount isOpen={isUpdateAccountOpen} onClose={handleCloseUpdateAccountButtonClick}></UpdateAccount>
+                <UpdateAccount
+                    isOpen={isUpdateAccountOpen}
+                    onClose={handleCloseUpdateAccountButtonClick}
+                    onUpdateAccount={updateAccount}
+                    selectedRow={selectedRowId}
+                ></UpdateAccount>
             )}
 
         </div>

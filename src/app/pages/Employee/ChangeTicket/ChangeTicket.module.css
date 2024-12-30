@@ -1,0 +1,20 @@
+.buyTickerContainer img {
+    margin-top: 164px;
+    width: 774px;
+    height: 327px;
+}
+
+.buyTickerContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    justify-content: center;
+    margin: 0 30px;
+    align-items: center;
+}
+
+.buyTicketSpace {
+    display: flex;
+    flex-direction: column;
+    gap: 38px;
+}

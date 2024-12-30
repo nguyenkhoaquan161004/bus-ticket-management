@@ -1,0 +1,320 @@
+.mainContainer {
+    margin-top: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 69px;
+    align-items: center;
+}
+
+.mainSpaceContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 89px;
+    width: fit-content;
+    justify-self: center;
+}
+
+/* FILL INFORMATIONS SPACE */
+.inputBasic,
+.selectBasic {
+    padding: 0 30px;
+    height: 65px;
+    width: 1086px;
+    min-width: 0;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 2px solid rgba(0, 0, 0, 0.25);
+}
+
+.selectBasic {
+    width: 1146px;
+}
+
+.itemInput {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.listInput {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.fillInforSpace {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.fillInforSpaceContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 68px;
+    align-items: center;
+}
+
+/* PAYMENT INFORMATIONS */
+.paymentInforSpaceContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+    /* PAYMENT INFOR SPACE */
+.paymentInforSpaceContainer .paymentInforSpace {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    justify-content: space-between;
+}
+        /* PAYMENT DETAILS */
+.itemDetails {
+    display: flex;
+    gap: 60px;
+}
+
+.itemDetails h5,
+.itemDetails p {
+    width: 178px;
+}
+
+.itemDetails p {
+    text-align: right;
+}
+
+.listDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.paymentDetailBox {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 32px 35px;
+    align-items: center;
+    width: fit-content;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+}
+
+.confirmRules input {
+    margin-right: 11px;
+    width: 16px;
+    height: 16px;
+}
+
+.paymentDetailContainer {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+}
+        /* PAYMENT RULES */
+.paymentRulesContainer p {
+    width: 503px;
+    min-width: 100px;
+    text-align: justify;
+}
+
+.paymentRulesContainer h4{
+    text-align: center;
+}
+
+.paymentRulesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 32px 30px;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    width: fit-content;
+}
+    /* PAYMENT CONFIRMATION */
+.btnSpace button {
+    padding: 5px 22px;
+    border-radius: 100px;
+}
+
+.btnCancel {
+    color: #2E6B75;
+    border: 1px solid #2E6B75;
+    background-color: #fff;
+}
+
+.btnPay {
+    color: #fff;
+    border: 1px solid #2E6B75;
+    background-color: #2E6B75;
+}
+
+.btnSpace {
+    display: flex;
+    gap: 20px;
+}
+
+.paymentConfirmSpace label {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+}
+
+.paymentConfirmSpace {
+    display: flex;
+    padding: 14px 32px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    justify-content: space-between;
+}
+
+/* PAYMENT BOX */
+.paymentBoxBackground {
+    position: fixed;
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    z-index: 10000;
+}
+
+.paymentBoxContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    padding: 47px 30px;
+    background-color: #fff;
+    border-radius: 20px;
+}
+
+.menthodPayment input {
+    width: 25px;
+    height: 25px;
+}
+
+.menthodPayment label {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.listOfMethods {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menthodPayment {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.costTicketInfor .costItem p {
+    width: 270px;
+    text-align: right;
+}
+
+.costTicketInfor .costItem {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+}
+
+.costTicketInfor hr {
+    width: 75%;
+}
+
+.mainCostTicketInfor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.costTicketInfor {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+}
+
+.mainTotalCostTicket .totalCostInfor {
+    width: 270px;
+    text-align: right;
+}
+
+.mainCostTicketInfor .costItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mainTotalCostTicket {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.costTicketInforFlexbox {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.totalCostTicketInfor {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.paymentBoxContainer .paymentInforSpace {
+    display: flex;
+    flex-direction: column;
+    gap: 31px;
+}
+
+.cancelBtn {
+    background-color: #fff;
+    color: #92C3BE;
+    border: 1px solid #92C3BE;
+    padding: 16px 38px;
+    border-radius: 15px;
+}
+
+.payBtn {
+    background-color: #92C3BE;
+    color: #fff;
+    padding: 16px 38px;
+    border-radius: 15px;
+}
+
+.listOfBtns {
+    display: flex;
+    gap: 31px;
+}
+
+.paymentInforFlexbox {
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+    align-items: center;
+}
+
+.paymentBoxContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 45px;
+    align-items: center;
+}

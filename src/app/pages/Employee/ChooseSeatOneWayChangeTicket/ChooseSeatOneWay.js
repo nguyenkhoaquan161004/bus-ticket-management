@@ -124,7 +124,7 @@ const ChooseSeatOneWay = () => {
                                 <button
                                     className={styles.btnConfirm}
                                     onClick={() => {
-                                        nav('/FillInfor', {
+                                        nav('/employee/FillInfor', {
                                             state: { costTicketOutbound: costTicket, location: `${selectedTrip.locationFrom} - ${selectedTrip.locationTo}` }
                                         })
                                     }}>
