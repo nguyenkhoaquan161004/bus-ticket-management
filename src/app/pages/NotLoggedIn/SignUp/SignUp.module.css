@@ -1,107 +1,127 @@
 .mainContainer button {
-    position: fixed;
-    top: 200px;
-    left: 137px;
-    background-color: transparent;
-    border: none;
+  position: fixed;
+  top: 200px;
+  left: 137px;
+  background-color: transparent;
+  border: none;
 }
 
 .mainContainer .icon {
-    width: 32px;
-    height: 32px;
+  width: 32px;
+  height: 32px;
 }
 
 .mainContainer h4 {
-    position: relative;
-    margin-top: 212px;
+  position: relative;
+  margin-top: 212px;
 }
 
 .mainContainer .inputItem,
-.mainContainer .inputPasswordItem{
-    justify-self: center;
-    width: 912px;
+.mainContainer .inputPasswordItem {
+  justify-self: center;
+  width: 912px;
 }
 
 .mainContainer .inputDoubleItem {
-    width: 936px;
-    justify-self: center;
+  width: 936px;
+  justify-self: center;
 }
 
 .mainContainer .inputItem input,
 .mainContainer .inputDoubleItem input,
 .mainContainer .inputPasswordItem input {
-    height: 60px;
-    width: 100%;
-    border-radius: 12px;
-    outline: none;
-    padding: 0 10px;
-    border: 2px solid rgba(0,0,0,0.25);
+  height: 60px;
+  width: 100%;
+  border-radius: 12px;
+  outline: none;
+  padding: 0 10px;
+  border: 2px solid rgba(0, 0, 0, 0.25);
 }
 
-.mainContainer .inputDoubleItem select{
-    height: 64px;
-    width: 213px;
-    border-radius: 12px;
-    outline: none;
-    border: 2px solid rgba(0, 0, 0, 0.25);
+.mainContainer .inputDoubleItem select {
+  height: 64px;
+  width: 213px;
+  border-radius: 12px;
+  outline: none;
+  border: 2px solid rgba(0, 0, 0, 0.25);
 }
 
 .mainContainer .inputDoubleItem {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .mainContainer .inputDoubleItem .inputGender {
-    height: fit-content;
+  height: fit-content;
 }
 
 .mainContainer .inputDoubleItem .inputName {
-    width: 680px;
-} 
+  width: 680px;
+}
 
 .mainContainer .inputName,
 .mainContainer .inputGender,
 .mainContainer .inputItem,
 .mainContainer .inputPassword {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .mainContainer .fillInputContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    width: fit-content;
-    justify-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: fit-content;
+  justify-self: center;
 }
 
 .mainContainer .inputPasswordItem {
-    display: flex;
-    gap: 40px;
+  display: flex;
+  gap: 40px;
 }
 
 .mainContainer .inputPassword {
-    width: 100%;
+  width: 100%;
 }
 
 .mainContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 60px;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  align-items: center;
 }
 
 .mainContainer .buttonSignUp {
-    padding: 20px 57px;
-    background-color: #2E6B75;
-    border-radius: 100px;
-    position: static;
+  padding: 20px 57px;
+  background-color: #2e6b75;
+  border-radius: 100px;
+  position: static;
 }
 
 .mainContainer .buttonSignUp h4 {
-    padding: 0;
-    margin: 0;
-    color: #fff;
+  padding: 0;
+  margin: 0;
+  color: #fff;
+}
+
+.inputItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.inputItem button {
+  padding: 10px 20px;
+  background-color: #2e6b75;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.inputItem button h4 {
+  margin: 0;
 }
