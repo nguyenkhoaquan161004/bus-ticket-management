@@ -2,27 +2,14 @@ import React, { useContext, useMemo, useState } from 'react';
 import styles from "./FillInfor.module.css";
 import ButtonBack from '../../../components/ButtonBack/ButtonBack';
 import clsx from 'clsx';
-
+import axios from 'axios';
 import { TicketContext } from '../../../modules/TicketContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-function promotion(id, name, discount) {
-    return { id, name, discount }
-}
-
-const promotionDatas = [
-    promotion(1, "Giảm giá 10% cho lượt đi", 10),
-    promotion(2, "Giảm giá 20% cho vé khứ hồi", 20),
-    promotion(3, "Giảm giá 15% khi đặt vé sớm", 15),
-    promotion(4, "Giảm giá 25% cho nhóm từ 5 người", 25),
-    promotion(5, "Ưu đãi đặc biệt mùa lễ hội 30%", 30),
-    promotion(6, "Giảm giá 5% cho khách hàng thân thiết", 5)
-]
 
 const FillInfor = () => {
     const { isRoundTrip } = useContext(TicketContext);
     const [discountPercent, setDiscountPercent] = useState(0);
-    const [selectedPromotion, setSelectedPromotion] = useState();
+    const [selectedPromotion, setSelectedPromotion] = useState('');
     const [isChecked, setIsChecked] = useState(false);
     const [isPaymentBoxOpen, setIsPaymentBoxOpen] = useState(false);
 
@@ -34,29 +21,41 @@ const FillInfor = () => {
     const sumOfCost = costTicketOutbound + costTicketReturn;
     const locationFromTo = location.state?.location;
     const totalCost = useMemo(() => {
-        if (isRoundTrip !== true) {
-            return costTicketOutbound - discountPercent / 100 * costTicketOutbound;
+        if (!isRoundTrip) {
+            return costTicketOutbound - (discountPercent / 100) * costTicketOutbound;
         } else {
-            return sumOfCost - discountPercent / 100 * sumOfCost;
+            return sumOfCost - (discountPercent / 100) * sumOfCost;
         }
     }, [isRoundTrip, discountPercent, costTicketOutbound, costTicketReturn]);
 
-    const handleSelectedPromotion = (e) => {
-        const selectedId = parseInt(e.target.value); // Lấy `id` của khuyến mãi được chọn
-        setSelectedPromotion(selectedId);
-
-        // Tìm khuyến mãi trong danh sách theo `id`
-        const selectedPromo = promotionDatas.find((promo) => promo.id === selectedId);
-        if (selectedPromo) {
-            setDiscountPercent(selectedPromo.discount); // Lưu `discount` của khuyến mãi
-        } else {
-            setDiscountPercent(0); // Không có khuyến mãi
+    const handleSelectedPromotion = async () => {
+        if (!selectedPromotion) {
+            alert("Vui lòng nhập mã khuyến mãi");
+            return;
         }
-    }
+        console.log('Selected Promotion:', selectedPromotion);  // Kiểm tra giá trị của mã khuyến mãi
+        try {
+            const response = await axios.get('http://localhost:5278/api/payment/promo', {
+                params: {
+                    promoId: selectedPromotion,
+                },
+            });
+            if (response && response.data && response.data.discountPercentage) {
+                setDiscountPercent(response.data.discountPercentage);
+                alert(`Giảm giá ${response.data.discountPercentage}%`);
+            } else {
+                alert("Mã khuyến mãi không hợp lệ.");
+                setDiscountPercent(0); 
+            }
+        } catch (error) {
+            console.error('Error fetching promotion data:', error);
+            setDiscountPercent(0); 
+        }
+    };
+    
 
     const handleCheck = () => {
         setIsChecked(!isChecked);
-        console.log(isChecked);
     }
 
     const handlePayButton = () => {
@@ -64,7 +63,6 @@ const FillInfor = () => {
             handleOpenPaymentBox();
         } else {
             alert("Vui lòng xác nhận chấp nhận điều khoản và quy định trước khi thanh toán.");
-            return;
         }
     }
 
@@ -78,10 +76,9 @@ const FillInfor = () => {
 
     return (
         <div className={styles.mainContainer}>
-            <ButtonBack></ButtonBack>
+            <ButtonBack />
             <h3>{locationFromTo}</h3>
             <div className={styles.mainSpaceContainer}>
-                {/* FILL INFORMATIONS SPACE */}
                 <div className={styles.fillInforSpaceContainer}>
                     <div className={styles.fillInforSpace}>
                         <h4>Thông tin khách hàng</h4>
@@ -108,26 +105,27 @@ const FillInfor = () => {
                                     placeholder='abc@gmail.com'></input>
                             </label>
                             <label className={clsx(styles.itemInput, "uiSemibold")}>
-                                Chọn khuyến mãi
-                                <select
-                                    className={clsx(styles.selectBasic, "p3")}
-                                    onChange={handleSelectedPromotion}>
-                                    <option value="0">--Chọn khuyến mãi--</option>
-                                    {promotionDatas.map((value, i) => {
-                                        return (
-                                            <option key={i} value={value.id}>{value.name}: -{value.discount}%</option>
-                                        )
-                                    })}
-                                </select>
+                                Mã khuyến mãi
+                                <div className={styles.promoCodeContainer}>
+                                    <input
+                                        type='text'
+                                        className={clsx(styles.inputBasic, "p3")}
+                                        value={selectedPromotion}
+                                        onChange={(e) => setSelectedPromotion(e.target.value)}
+                                        placeholder='Nhập mã khuyến mãi'></input>
+                                    <button
+                                        className={clsx(styles.btnApplyPromo, "uiSemibold")}
+                                        onClick={handleSelectedPromotion}>
+                                        Áp dụng
+                                    </button>
+                                </div>
                             </label>
                         </div>
                     </div>
                 </div>
-                {/* PAYMENT INFORMATIONS */}
+
                 <div className={styles.paymentInforSpaceContainer}>
-                    {/* PAYMENT INFOR SPACE */}
                     <div className={styles.paymentInforSpace}>
-                        {/* PAYMENT DETAILS */}
                         <div className={styles.paymentDetailContainer}>
                             <div className={styles.paymentDetailBox}>
                                 <h4>Thông tin thanh toán</h4>
@@ -160,13 +158,13 @@ const FillInfor = () => {
                                 Chấp nhận <span className='uiSemibold' style={{ color: "#D7987D" }}>điều khoản và quy định</span> khi đặt vé
                             </label>
                         </div>
-                        {/* PAYMENT RULES */}
+
                         <div className={styles.paymentRulesContainer}>
                             <h4>Quy định đặt vé</h4>
                             <p className='p3'>Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít nhất 30 phút giờ xe khởi hành, mang theo thông báo đã thanh toán vé thành công có chứa mã vé được gửi từ hệ thống.<div style={{ height: 21 }}></div>Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng đài trung chuyển trước khi đặt vé. Chúng tôi không đón/trung chuyển tại những điểm xe trung chuyển không thể tới được.</p>
                         </div>
                     </div>
-                    {/* PAYMENT CONFIRMATION */}
+
                     <div className={styles.paymentConfirmSpace}>
                         <label className='p3'>Tổng tiền: <h4 style={{ color: "#D7987D" }}>{totalCost}VND</h4></label>
                         <div className={styles.btnSpace}>
@@ -180,7 +178,7 @@ const FillInfor = () => {
                     </div>
                 </div>
             </div>
-            {/* PAYMENT BOX */}
+
             {isPaymentBoxOpen && (
                 <div
                     className={styles.paymentBoxBackground}
@@ -197,8 +195,7 @@ const FillInfor = () => {
                                         <label className='p3'>
                                             <input
                                                 type='radio'
-                                                name='menthod'
-                                            ></input>
+                                                name='menthod'></input>
                                             VNPay
                                         </label>
                                         <label className='p3'>
@@ -210,7 +207,7 @@ const FillInfor = () => {
                                     </div>
                                 </div>
                                 <div className={styles.costTicketInforFlexbox}>
-                                    <hr></hr>
+                                    <hr />
                                     <div className={styles.mainCostTicketInfor}>
                                         <div className={styles.costItem}>
                                             <h4>Giá vé:</h4>
@@ -221,7 +218,7 @@ const FillInfor = () => {
                                             <p className='p2'>{discountPercent}%</p>
                                         </div>
                                     </div>
-                                    <hr></hr>
+                                    <hr />
                                 </div>
                                 <div className={styles.totalCostTicketInfor}>
                                     <div className={styles.mainTotalCostTicket}>
@@ -230,24 +227,24 @@ const FillInfor = () => {
                                             className={styles.totalCostInfor}
                                             style={{ color: "#D7987D" }}>{totalCost}VND</h4>
                                     </div>
-                                    <p3
-                                        className='p3'
-                                        style={{ color: "#E82127" }}>Khách hàng phải thanh toán trước khi xe khởi hành</p3>
+                                    <p className='p3' style={{ color: "#D7987D" }}>Thanh toán trực tuyến qua VNPay</p>
                                 </div>
                             </div>
-                            <div className={styles.listOfBtns}>
-                                <button
-                                    className={styles.cancelBtn}
-                                    onClick={handleClosePaymentBox}><h4>Hủy</h4></button>
-                                <button className={styles.payBtn}><h4>Thanh toán</h4></button>
-                            </div>
+                        </div>
+                        <div className={styles.paymentConfirmBtnSpace}>
+                            <button
+                                className={clsx(styles.btnCancel, "uiSemibold")}
+                                onClick={handleClosePaymentBox}>Quay lại</button>
+                            <button
+                                className={clsx(styles.btnPay, "uiSemibold")}>Thanh toán</button>
                         </div>
                     </div>
                 </div>
             )}
-
         </div>
     );
 };
+
+
 
 export default FillInfor;

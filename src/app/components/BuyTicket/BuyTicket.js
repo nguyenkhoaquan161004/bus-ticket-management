@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import styles from "./BuyTicket.module.css";
 import { Navigate } from 'react-router-dom';
 import { TicketContext } from '../../modules/TicketContext';
-
+import axios from 'axios';
 import ChooseRound from './ChooseRound';
 
 function resultData(id, locationFrom, timeStart, locationTo, timeEnd, timeDuring, dateTime, freeSeat, cost) {
@@ -115,27 +115,85 @@ const BuyTicket = () => {
     };
 
 
-    const handleSearchButtonClick = () => {
+
+
+    const handleTripSelected = (trip) => {
+        setSelectedTrip(trip);
+    };
+    const handleSearchButtonClick = async () => {
         if (isRoundTrip) {
             if (!searchLoactionFrom || !searchLoactionTo || !searchDateTimeFrom || !searchDateTimeTo || !searchFreeSeat) {
                 alert('Vui lòng nhập đủ thông tin tìm kiếm');
                 return;
             }
-            handleSearchOutbound();
-            handleSearchReturn();
+            try {
+                // Tìm kiếm outbound (chuyến đi)
+                const outboundResponse = await axios.get('http://localhost:5278/api/bookticket/search', {
+                    params: {
+                        departPlace: searchLoactionFrom,
+                        arrivalPlace: searchLoactionTo,
+                        departureDate: searchDateTimeFrom,
+                        ticketCount: searchFreeSeat,
+                    }
+                });
+                
+                if (outboundResponse.data.length === 0) {
+                    setNoResultsOutboundFound(true);
+                } else {
+                    setNoResultsOutboundFound(false);
+                    setFilteredRowsOutbound(outboundResponse.data);
+                }
+
+                // Tìm kiếm return (chuyến về)
+                const returnResponse = await axios.get('http://localhost:5278/api/bookticket/search', {
+                    params: {
+                        departPlace: searchLoactionTo,
+                        arrivalPlace: searchLoactionFrom,
+                        departureDate: searchDateTimeTo,
+                        ticketCount: searchFreeSeat,
+                    }
+                });
+                
+                if (returnResponse.data.length === 0) {
+                    setNoResultsReturnFound(true);
+                } else {
+                    setNoResultsReturnFound(false);
+                    setFilteredRowsReturn(returnResponse.data);
+                }
+                
+                setIsResultOpen(true);
+            } catch (error) {
+                alert('Đã có lỗi xảy ra khi gọi API');
+            }
         } else {
+            // Tìm kiếm cho chuyến đi một chiều
             if (!searchLoactionFrom || !searchLoactionTo || !searchDateTimeFrom || !searchFreeSeat) {
                 alert('Vui lòng nhập đủ thông tin tìm kiếm');
                 return;
             }
-            handleSearchOutbound();
+            try {
+                const response = await axios.get('http://localhost:5278/api/bookticket/search', {
+                    params: {
+                        departPlace: searchLoactionFrom,
+                        arrivalPlace: searchLoactionTo,
+                        departureDate: searchDateTimeFrom,
+                        ticketCount: searchFreeSeat,
+                    }
+                });
+console.log(response.data);
+                if (response.data.length === 0) {
+                    setNoResultsOutboundFound(true);
+                } else {
+                    setNoResultsOutboundFound(false);
+                    setFilteredRowsOutbound(response.data);
+                }
+                
+                setIsResultOpen(true);
+            } catch (error) {
+                alert('Đã có lỗi xảy ra khi gọi API');
+            }
         }
     };
-
-    const handleTripSelected = (trip) => {
-        setSelectedTrip(trip);
-    };
-
     return (
         <div>
             <div>
