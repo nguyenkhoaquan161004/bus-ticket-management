@@ -182,7 +182,7 @@ const ChooseSeatRoundTrip = () => {
                                     <h4>Hủy</h4>
                                 </button>
                                 <button className={styles.btnConfirm}
-                                    onClick={() => nav("/notLoggedIn/FillInfor",
+                                    onClick={() => nav("/FillInfor",
                                         { state: { costTicketOutbound: costTicketOutbound, costTicketReturn: costTicketReturn, location: `${selectedTrip.locationFrom} - ${selectedTrip.locationTo}` } }
                                     )}>
                                     <h4>Xác nhận</h4>

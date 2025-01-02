@@ -128,3 +128,97 @@
     position: relative;
     z-index: 2;
 }
+
+/* PRINT TICKET */
+.boxBackground {
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.itemInfor h4 {
+    width: 216px;
+}
+
+.itemInfor p {
+    width: 320px;
+    text-align: right;
+}
+
+.itemInfor {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.inforTicket,
+.costTicket {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.inforSpaceContainer hr {
+    width: 70%;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.totalCostTicket {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.printBoxContainer {
+    background-color: #fff;
+    padding: 20px 24px;
+    border-radius: 12px;;
+    height: 600px;
+    overflow-x: hidden;
+}
+
+.inforSpaceContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    align-items: center;
+}
+
+.cancelButton {
+    color: #D7987D;
+    border: 2px solid #D7987D;
+    border-radius: 5px;
+    padding: 8px 30px;
+}
+
+.printButton {
+    color: #fff;
+    background-color: #92C3BE;
+    padding: 8px 30px;
+    border-radius: 5px;
+}
+
+.listOfBtnsContainer {
+    display: flex;
+    width: 100%;
+    gap: 32px;
+    justify-content: flex-end;
+}
+
+.printFlexBoxContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.printBoxContainer h3 {
+    margin: 24px 0;
+}

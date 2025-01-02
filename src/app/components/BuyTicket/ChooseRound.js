@@ -8,10 +8,10 @@ const ChooseRound = ({ rows, isRoundTrip }) => {
     // Hàm xử lý khi chọn chuyến
     const onChooseTrip = (row) => {
         if (isRoundTrip === true) {
-            nav('/notLoggedIn/ChooseSeatRoundTrip', { state: { selectedTrip: row } });
+            nav('ChooseSeatRoundTrip', { state: { selectedTrip: row } });
         }
         if (isRoundTrip !== true) {
-            nav('/notLoggedIn/ChooseSeatOneWay', { state: { selectedTrip: row } });
+            nav('ChooseSeatOneWay', { state: { selectedTrip: row } });
         }
     };
 

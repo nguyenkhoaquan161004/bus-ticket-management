@@ -26,6 +26,7 @@ const ChooseSeatOneWay = () => {
     }
 
     if (!selectedTrip) {
+        // Xử lý khi không có dữ liệu được truyền (ví dụ: người dùng truy cập trực tiếp qua URL)
         return <div>Không có thông tin chuyến. Vui lòng quay lại!</div>;
     }
 
@@ -123,7 +124,7 @@ const ChooseSeatOneWay = () => {
                                 <button
                                     className={styles.btnConfirm}
                                     onClick={() => {
-                                        nav('/FillInfor', {
+                                        nav('/employee/FillInfor', {
                                             state: { costTicketOutbound: costTicket, location: `${selectedTrip.locationFrom} - ${selectedTrip.locationTo}` }
                                         })
                                     }}>

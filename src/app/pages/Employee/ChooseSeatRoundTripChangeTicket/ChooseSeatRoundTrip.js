@@ -1,10 +1,9 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './ChooseSeatRoundTrip.module.css'
 import ButtonBack from '../../../components/ButtonBack/ButtonBack';
 import SeatRows from '../ChooseSeatOneWay/SeatRows';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { use } from 'react';
-import { ChangeTicketContext } from '../../../modules/ChangeTicketContext';
 
 const ChooseSeatRoundTrip = () => {
     const [isConfirmBoxOpen, setIsConfirmBoxOpen] = useState(false);
@@ -15,7 +14,6 @@ const ChooseSeatRoundTrip = () => {
     const selectedTrip = location.state?.selectedTrip;
 
     const nav = useNavigate();
-    const { isChangeTicket } = useContext(ChangeTicketContext);
 
     const handleOpenConfirmBox = () => {
         setIsConfirmBoxOpen(true);
@@ -184,17 +182,9 @@ const ChooseSeatRoundTrip = () => {
                                     <h4>Hủy</h4>
                                 </button>
                                 <button className={styles.btnConfirm}
-                                    onClick={() => {
-                                        if (!isChangeTicket) {
-                                            nav("/employee/FillInfor",
-                                                { state: { costTicketOutbound: costTicketOutbound, costTicketReturn: costTicketReturn, location: `${selectedTrip.locationFrom} - ${selectedTrip.locationTo}` } }
-                                            )
-                                        } else {
-                                            alert("Đổi vé thành công.")
-                                            nav("/employee/SearchTicket")
-                                        }
-
-                                    }}>
+                                    onClick={() => nav("/employee/FillInfor",
+                                        { state: { costTicketOutbound: costTicketOutbound, costTicketReturn: costTicketReturn, location: `${selectedTrip.locationFrom} - ${selectedTrip.locationTo}` } }
+                                    )}>
                                     <h4>Xác nhận</h4>
                                 </button>
                             </div>
@@ -202,9 +192,8 @@ const ChooseSeatRoundTrip = () => {
 
                     </div>
                 </div>
-            )
-            }
-        </div >
+            )}
+        </div>
     );
 };
 
