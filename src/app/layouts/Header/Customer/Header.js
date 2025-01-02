@@ -2,11 +2,25 @@ import React from "react";
 import styles from "./Header.module.css";
 import { useNavigate } from 'react-router-dom';
 import { InlineIcon } from "@iconify/react/dist/iconify.js";
-
+import axios from 'axios'; 
 export default function Header() {
 
   const nav = useNavigate();
+  const handleSignOut = async () => {
+    try {
+        const response = await axios.post('http://localhost:5278/api/auth/signout');
 
+        if (response.status === 200) {
+            localStorage.clear();
+
+      
+        } else {
+            console.error(response.data.message || 'Signout failed.');
+        }
+    } catch (error) {
+        console.error('Error signing out:', error.response?.data || error.message);
+    }
+};
   return <div className={styles.headerContainer}>
     <div className={styles.headerFlexBox}>
       <div className={styles.logoAndNav}>
@@ -36,7 +50,10 @@ export default function Header() {
         </button>
         <button
           className={styles.btnLogin}
-          onClick={() => nav("/")}>
+          onClick={() => {
+            nav("/");
+            handleSignOut(); 
+        }}>
           <p className="uiSemibold">ĐĂNG XUẤT</p>
         </button>
       </div>
