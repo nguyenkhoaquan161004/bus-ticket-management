@@ -27,7 +27,6 @@ const ChooseSeatRoundTrip = () => {
     }
 
     if (!selectedTrip) {
-        // Xử lý khi không có dữ liệu được truyền (ví dụ: người dùng truy cập trực tiếp qua URL)
         return <div style={{ marginTop: 200 }}>Không có thông tin chuyến. Vui lòng quay lại!</div>;
     }
 
@@ -43,7 +42,7 @@ const ChooseSeatRoundTrip = () => {
         <div>
             <div>
                 <ButtonBack></ButtonBack>
-                <h3 style={{ marginTop: 211, textAlign: "center" }}> {selectedTrip.locationFrom} - {selectedTrip.locationTo}</h3>
+                <h3 style={{ marginTop: 211, textAlign: "center" }}> {selectedTrip.departPlace} - {selectedTrip.arrivalPlace}</h3>
                 <div className={styles.mainContainer}>
                     <div className={styles.mainSpaceContainer}>
                         <SeatRows onSeatChange={handleSeatOutbountSelection}></SeatRows>
@@ -53,11 +52,11 @@ const ChooseSeatRoundTrip = () => {
                                 <div className={styles.detailContainer}>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Tuyến xe:</p>
-                                        <p className="uiMedium">{selectedTrip.locationFrom} - {selectedTrip.locationTo}</p>
+                                        <p className="uiMedium">{selectedTrip.departPlace} - {selectedTrip.arrivalPlace}</p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Thời gian xuất bến:</p>
-                                        <p className="uiMedium">{selectedTrip.timeStart} {selectedTrip.dataTime} 09/12/2024</p>
+                                        <p className="uiMedium">{selectedTrip.departureTime} {selectedTrip.dataTime} 09/12/2024</p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Số lượng ghế: </p>
@@ -161,7 +160,7 @@ const ChooseSeatRoundTrip = () => {
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Thời gian xuất bến:</p>
-                                        <p className="uiMedium">{selectedTrip.timeStart} {selectedTrip.dataTime} 09/12/2024</p>
+                                        <p className="uiMedium">{selectedTrip.timeStart} </p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Số lượng ghế: </p>

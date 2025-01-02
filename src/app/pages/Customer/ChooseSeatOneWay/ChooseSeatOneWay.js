@@ -7,15 +7,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const ChooseSeatOneWay = () => {
     const [isConfirmBoxOpen, setIsConfirmBoxOpen] = useState(false);
-    const [selectedSeats, setSelectedSeats] = useState([]);
-
+    const [selectedSeats, setSelectedSeats] = useState({
+        ids: [], 
+        numbers: [] 
+    });
 
     const location = useLocation();
     const selectedTrip = location.state?.selectedTrip;
 
     const nav = useNavigate();
 
-    const costTicket = useMemo(() => selectedTrip.cost * selectedSeats.length, [selectedTrip.cost, selectedSeats]);
+    const costTicket = useMemo(() => selectedTrip.pricePerSeat * selectedSeats.ids.length, [selectedTrip.pricePerSeat, selectedSeats]);
 
     const handleOpenConfirmBox = () => {
         setIsConfirmBoxOpen(true);
@@ -24,9 +26,20 @@ const ChooseSeatOneWay = () => {
     const handleCloseConfirmBox = () => {
         setIsConfirmBoxOpen(false);
     }
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+    
+        const hours = date.getHours().toString().padStart(2, '0'); 
+        const minutes = date.getMinutes().toString().padStart(2, '0'); 
+        const day = date.getDate().toString().padStart(2, '0'); 
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+        const year = date.getFullYear();
+    
+        return `${hours}:${minutes} ${day}/${month}/${year}`;
 
+    }
+    
     if (!selectedTrip) {
-        // Xử lý khi không có dữ liệu được truyền (ví dụ: người dùng truy cập trực tiếp qua URL)
         return <div>Không có thông tin chuyến. Vui lòng quay lại!</div>;
     }
 
@@ -34,7 +47,7 @@ const ChooseSeatOneWay = () => {
         setSelectedSeats(seats);
     }
 
-
+    
     return (
         <div>
             <div>
@@ -42,7 +55,7 @@ const ChooseSeatOneWay = () => {
                 <h3 style={{ marginTop: 211, textAlign: "center" }}>{selectedTrip.departPlace} - {selectedTrip.arrivalPlace}</h3>
                 <div className={styles.mainContainer}>
                     <div className={styles.mainSpaceContainer}>
-                        <SeatRows onSeatChange={handleSeatSelection}></SeatRows>
+                        <SeatRows seats={selectedTrip.seats} onSeatChange={handleSeatSelection}></SeatRows>
                         <div className={styles.inforTicketContainer}>
                             <div className={styles.inforTicket}>
                                 <h4>Thông tin lượt đi</h4>
@@ -53,22 +66,22 @@ const ChooseSeatOneWay = () => {
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Thời gian xuất bến:</p>
-                                        <p className="uiMedium">{selectedTrip.departureTime} </p>
+                                        <p className="uiMedium">{formatDate(selectedTrip.departureTime)} </p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Số lượng ghế: </p>
-                                        <p className="uiMedium">{selectedSeats.length}</p>
+                                        <p className="uiMedium">{selectedSeats.ids.length}</p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Số ghế: </p>
-                                        <p className="uiMedium">{selectedSeats.join(", ")}</p>
+                                        <p className="uiMedium">{selectedSeats.numbers.join(", ")}</p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium" style={{ fontWeight: 600 }}>Tổng tiền lượt đi: </p>
                                         <p className="uiMedium">{costTicket}VND</p>
                                     </div>
                                 </div>
-                            </div>s
+                            </div>
                         </div>
                     </div>
 
@@ -97,19 +110,19 @@ const ChooseSeatOneWay = () => {
                                 <div className={styles.detailContainer}>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Tuyến xe:</p>
-                                        <p className="uiMedium">Mien Tay - O Mon</p>
+                                        <p className="uiMedium">{selectedTrip.departPlace} - {selectedTrip.arrivalPlace}</p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Thời gian xuất bến:</p>
-                                        <p className="uiMedium">13:30 09/12/2024</p>
+                                        <p className="uiMedium">{formatDate(selectedTrip.departureTime)}</p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Số lượng ghế: </p>
-                                        <p className="uiMedium">{selectedSeats.length}</p>
+                                        <p className="uiMedium">{selectedSeats.ids.length}</p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium">Số ghế: </p>
-                                        <p className="uiMedium">{selectedSeats.join(", ")}</p>
+                                        <p className="uiMedium">{selectedSeats.numbers.join(", ")}</p>
                                     </div>
                                     <div className={styles.detailItem}>
                                         <p className="uiMedium" style={{ fontWeight: 600 }}>Tổng tiền lượt đi: </p>
@@ -125,7 +138,7 @@ const ChooseSeatOneWay = () => {
                                     className={styles.btnConfirm}
                                     onClick={() => {
                                         nav('/customer/FillInfor', {
-                                            state: { costTicketOutbound: costTicket, location: `${selectedTrip.locationFrom} - ${selectedTrip.locationTo}` }
+                                            state: {selectedTrip:selectedTrip, costTicketOutbound: costTicket, location: `${selectedTrip.departPlace}  - ${selectedTrip.arrivalPlace}`,selectedSeats:selectedSeats }
                                         })
                                     }}>
                                     <h4>Xác nhận</h4>

@@ -1,57 +1,98 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState, useEffect,useCallback } from 'react';
 import styles from "./FillInfor.module.css";
 import ButtonBack from '../../../components/ButtonBack/ButtonBack';
 import clsx from 'clsx';
-
+import axios from 'axios';
 import { TicketContext } from '../../../modules/TicketContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import promotionDatas from '../../../assets/Promotion';
+import { QRCodeCanvas } from 'qrcode.react';
+import Countdown from 'react-countdown';
 
 const FillInfor = () => {
     const { isRoundTrip } = useContext(TicketContext);
     const [discountPercent, setDiscountPercent] = useState(0);
-    const [selectedPromotion, setSelectedPromotion] = useState();
+    const [selectedPromotion, setSelectedPromotion] = useState('');
     const [isChecked, setIsChecked] = useState(false);
     const [isPaymentBoxOpen, setIsPaymentBoxOpen] = useState(false);
+    const [routeData, setRouteData] = useState({});
+    const [showQR, setShowQR] = useState(false);
+  const location = useLocation();
+  const selectedTrip = location.state?.selectedTrip;
+  const selectedSeats = location.state?.selectedSeats;
 
-    const location = useLocation();
+const [tickets,setTickets] = useState([]);
     const nav = useNavigate();
 
     const costTicketOutbound = location.state?.costTicketOutbound;
     const costTicketReturn = location.state?.costTicketReturn;
-    const sumOfCost = () => {
-        if (!isRoundTrip) {
-            return costTicketOutbound;
-        } else {
-            return costTicketOutbound + costTicketReturn;
-        }
-    };
+    const sumOfCost = (costTicketOutbound ?? 0) + (costTicketReturn ?? 0);
     const locationFromTo = location.state?.location;
     const totalCost = useMemo(() => {
-        if (isRoundTrip !== true) {
-            return costTicketOutbound - discountPercent / 100 * costTicketOutbound;
+        if (!isRoundTrip) {
+            return costTicketOutbound - (discountPercent / 100) * costTicketOutbound;
         } else {
-            return sumOfCost - discountPercent / 100 * sumOfCost;
+            return sumOfCost - (discountPercent / 100) * sumOfCost;
         }
     }, [isRoundTrip, discountPercent, costTicketOutbound, costTicketReturn]);
+    const costPerSet = totalCost/selectedSeats.ids.length;
 
-    const handleSelectedPromotion = (e) => {
-        const selectedId = parseInt(e.target.value); // Lấy `id` của khuyến mãi được chọn
-        setSelectedPromotion(selectedId);
-
-        // Tìm khuyến mãi trong danh sách theo `id`
-        const selectedPromo = promotionDatas.find((promo) => promo.id === selectedId);
-        if (selectedPromo) {
-            setDiscountPercent(selectedPromo.precentDiscount); // Lưu `discount` của khuyến mãi
-        } else {
-            setDiscountPercent(0); // Không có khuyến mãi
+    const [bookingData, setBookingData] = useState({
+        BusBusRouteID: selectedTrip.busBusRouteID, 
+        CustomerID:parseInt(localStorage.getItem("accountId")),     
+        SeatNum: selectedSeats.ids.join(","),             
+        Type: selectedTrip.bus.type,                 
+        Price: costPerSet,  
+            })
+    ;
+    const handleSelectedPromotion = async () => {
+        if (!selectedPromotion) {
+            alert("Vui lòng nhập mã khuyến mãi");
+            return;
         }
-    }
-
+        console.log('Selected Promotion:', selectedPromotion);  // Kiểm tra giá trị của mã khuyến mãi
+        try {
+            const response = await axios.get('http://localhost:5278/api/payment/promo', {
+                params: {
+                    promoId: selectedPromotion,
+                },
+            });
+            if (response && response.data && response.data.discountPercentage) {
+                setDiscountPercent(response.data.discountPercentage);
+                alert(`Giảm giá ${response.data.discountPercentage}%`);
+            } else {
+                alert("Mã khuyến mãi không hợp lệ.");
+                setDiscountPercent(0); 
+            }
+        } catch (error) {
+            console.error('Error fetching promotion data:', error);
+            setDiscountPercent(0); 
+        }
+    };
+    
+    const fetchData = useCallback(async () => {
+        try {
+          const response = await axios.get('http://localhost:5278/api/payment', {
+            params: {
+              busBusRouteId: selectedTrip.busBusRouteID,
+              customerId:parseInt(localStorage.getItem("accountId")),
+            },
+          });
+          setRouteData({
+            departPlace: response.data.departPlace,
+            arrivalPlace: response.data.arrivalPlace,
+            Name: response.data.customerName,
+            Phone: response.data.customerPhoneNumber,
+            Mail: response.data.customerEmail,
+          });
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }, );
+      useEffect(() => {
+        fetchData();
+      }, [fetchData]);
     const handleCheck = () => {
         setIsChecked(!isChecked);
-        console.log(isChecked);
     }
 
     const handlePayButton = () => {
@@ -59,8 +100,8 @@ const FillInfor = () => {
             handleOpenPaymentBox();
         } else {
             alert("Vui lòng xác nhận chấp nhận điều khoản và quy định trước khi thanh toán.");
-            return;
         }
+
     }
 
     const handleOpenPaymentBox = () => {
@@ -70,13 +111,46 @@ const FillInfor = () => {
     const handleClosePaymentBox = () => {
         setIsPaymentBoxOpen(false);
     }
-
+    const handleConfirmBooking = useCallback(async () => {
+        setIsPaymentBoxOpen(false);
+    
+        const updatedBookingData = {
+            ...bookingData,
+            Price: costPerSet, 
+        };
+    console.log(bookingData);
+        try {
+            const response = await axios.post('http://localhost:5278/api/bookticket/create-tickets', updatedBookingData);
+            
+            if (response.status === 200) {
+                const { tickets } = response.data;
+                if (Array.isArray(tickets)) {
+                    console.log('Tickets created successfully:', tickets);
+                    setTickets(tickets); 
+                    setShowQR(true);
+                } else {
+                    console.error('Dữ liệu vé không hợp lệ:', tickets);
+                    alert('Dữ liệu vé không hợp lệ. Vui lòng thử lại.');
+                }
+            }
+        } catch (error) {
+            console.error('Error creating tickets:', error.response?.data || error.message);
+            alert(`Đã xảy ra lỗi khi đặt vé: ${error.response?.data?.message || 'Vui lòng thử lại.'}`);
+        }
+    }, [bookingData, costPerSet]);
+    const renderer = ({ minutes, seconds, completed }) => {
+        if (completed) {
+          return <span>Hết thời gian thanh toán!</span>;
+        } else {
+          return <span>{minutes}:{seconds}</span>;
+        }
+      };
+    
     return (
         <div className={styles.mainContainer}>
-            <ButtonBack></ButtonBack>
+            <ButtonBack />
             <h3>{locationFromTo}</h3>
             <div className={styles.mainSpaceContainer}>
-                {/* FILL INFORMATIONS SPACE */}
                 <div className={styles.fillInforSpaceContainer}>
                     <div className={styles.fillInforSpace}>
                         <h4>Thông tin khách hàng</h4>
@@ -84,45 +158,47 @@ const FillInfor = () => {
                             <label className={clsx(styles.itemInput, "uiSemibold")}>
                                 Họ và tên
                                 <input
+                                 readOnly
                                     type='text'
                                     className={clsx(styles.inputBasic, "p3")}
-                                    placeholder='Nguyễn Văn A'></input>
+                                    value={routeData.Name}></input>
                             </label>
                             <label className={clsx(styles.itemInput, "uiSemibold")}>
                                 Số điện thoại
                                 <input
                                     type='number'
                                     className={clsx(styles.inputBasic, "p3")}
-                                    placeholder='0xx xxx xxxx'></input>
+                                    value={routeData.Phone} readOnly></input>
                             </label>
                             <label className={clsx(styles.itemInput, "uiSemibold")}>
                                 Email
                                 <input
                                     type='email'
                                     className={clsx(styles.inputBasic, "p3")}
-                                    placeholder='abc@gmail.com'></input>
+                                    value={routeData.Mail} readOnly></input>
                             </label>
                             <label className={clsx(styles.itemInput, "uiSemibold")}>
-                                Chọn khuyến mãi
-                                <select
-                                    className={clsx(styles.selectBasic, "p3")}
-                                    onChange={handleSelectedPromotion}>
-                                    <option value="0">--Chọn khuyến mãi--</option>
-                                    {promotionDatas.map((value, i) => {
-                                        return (
-                                            <option key={i} value={value.id}>{value.namePromotion}: -{value.precentDiscount}%</option>
-                                        )
-                                    })}
-                                </select>
+                                Mã khuyến mãi
+                                <div classN ame={styles.promoCodeContainer}>
+                                    <input
+                                        type='text'
+                                        className={clsx(styles.inputBasic, "p3")}
+                                        value={selectedPromotion}
+                                        onChange={(e) => setSelectedPromotion(e.target.value)}
+                                        placeholder='Nhập mã khuyến mãi'></input>
+                                    <button
+                                        className={clsx(styles.btnApplyPromo, "uiSemibold")}
+                                        onClick={handleSelectedPromotion}>
+                                        Áp dụng
+                                    </button>
+                                </div>
                             </label>
                         </div>
                     </div>
                 </div>
-                {/* PAYMENT INFORMATIONS */}
+
                 <div className={styles.paymentInforSpaceContainer}>
-                    {/* PAYMENT INFOR SPACE */}
                     <div className={styles.paymentInforSpace}>
-                        {/* PAYMENT DETAILS */}
                         <div className={styles.paymentDetailContainer}>
                             <div className={styles.paymentDetailBox}>
                                 <h4>Thông tin thanh toán</h4>
@@ -155,13 +231,13 @@ const FillInfor = () => {
                                 Chấp nhận <span className='uiSemibold' style={{ color: "#D7987D" }}>điều khoản và quy định</span> khi đặt vé
                             </label>
                         </div>
-                        {/* PAYMENT RULES */}
+
                         <div className={styles.paymentRulesContainer}>
                             <h4>Quy định đặt vé</h4>
                             <p className='p3'>Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít nhất 30 phút giờ xe khởi hành, mang theo thông báo đã thanh toán vé thành công có chứa mã vé được gửi từ hệ thống.<div style={{ height: 21 }}></div>Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng đài trung chuyển trước khi đặt vé. Chúng tôi không đón/trung chuyển tại những điểm xe trung chuyển không thể tới được.</p>
                         </div>
                     </div>
-                    {/* PAYMENT CONFIRMATION */}
+
                     <div className={styles.paymentConfirmSpace}>
                         <label className='p3'>Tổng tiền: <h4 style={{ color: "#D7987D" }}>{totalCost}VND</h4></label>
                         <div className={styles.btnSpace}>
@@ -175,7 +251,7 @@ const FillInfor = () => {
                     </div>
                 </div>
             </div>
-            {/* PAYMENT BOX */}
+
             {isPaymentBoxOpen && (
                 <div
                     className={styles.paymentBoxBackground}
@@ -192,8 +268,7 @@ const FillInfor = () => {
                                         <label className='p3'>
                                             <input
                                                 type='radio'
-                                                name='menthod'
-                                            ></input>
+                                                name='menthod'></input>
                                             VNPay
                                         </label>
                                         <label className='p3'>
@@ -205,7 +280,7 @@ const FillInfor = () => {
                                     </div>
                                 </div>
                                 <div className={styles.costTicketInforFlexbox}>
-                                    <hr></hr>
+                                    <hr />
                                     <div className={styles.mainCostTicketInfor}>
                                         <div className={styles.costItem}>
                                             <h4>Giá vé:</h4>
@@ -216,7 +291,7 @@ const FillInfor = () => {
                                             <p className='p2'>{discountPercent}%</p>
                                         </div>
                                     </div>
-                                    <hr></hr>
+                                    <hr />
                                 </div>
                                 <div className={styles.totalCostTicketInfor}>
                                     <div className={styles.mainTotalCostTicket}>
@@ -225,24 +300,32 @@ const FillInfor = () => {
                                             className={styles.totalCostInfor}
                                             style={{ color: "#D7987D" }}>{totalCost}VND</h4>
                                     </div>
-                                    <p3
-                                        className='p3'
-                                        style={{ color: "#E82127" }}>Khách hàng phải thanh toán trước khi xe khởi hành</p3>
+                                    <p className='p3' style={{ color: "#D7987D" }}>Thanh toán trực tuyến qua VNPay</p>
                                 </div>
                             </div>
-                            <div className={styles.listOfBtns}>
-                                <button
-                                    className={styles.cancelBtn}
-                                    onClick={handleClosePaymentBox}><h4>Hủy</h4></button>
-                                <button className={styles.payBtn}><h4>Thanh toán</h4></button>
-                            </div>
+                        </div>
+                        <div className={styles.paymentConfirmBtnSpace}>
+                            <button
+                                className={clsx(styles.btnCancel, "uiSemibold")}
+                                onClick={handleClosePaymentBox}>Quay lại</button>
+                            <button
+                                className={clsx(styles.btnPay, "uiSemibold")}
+                                onClick={handleConfirmBooking}>Thanh toán</button>
                         </div>
                     </div>
                 </div>
             )}
-
+            {showQR && (
+            <div className={styles.qrContainer}>
+              <QRCodeCanvas value="http://example.com/payment" />
+              <Countdown date={Date.now() + 600000} renderer={renderer} />
+              <button variant="contained" color="#2E6B75" className={styles.apply} >Đã thanh toán</button>
+            </div>
+          )}
         </div>
     );
 };
+
+
 
 export default FillInfor;

@@ -7,13 +7,31 @@ const ChooseRound = ({ rows, isRoundTrip }) => {
 
     // Hàm xử lý khi chọn chuyến
     const onChooseTrip = (row) => {
+        const accountType = localStorage.getItem("accountType")
+        if(accountType==="Customer"){
         if (isRoundTrip === true) {
-            nav(`ChooseSeatRoundTrip/`, { state: { selectedTrip: row } });
+            nav(`/customer/ChooseSeatRoundTrip`, { state: { selectedTrip: row } });
         }
         if (isRoundTrip !== true) {
-            nav('ChooseSeatOneWay', { state: { selectedTrip: row } });
-        }
-    };
+            nav('/customer/ChooseSeatOneWay', { state: { selectedTrip: row } });
+        }}
+        else if(accountType==="Ticketcletk")
+            {
+                if (isRoundTrip === true) {
+                    nav(`/employee/ChooseSeatRoundTrip`, { state: { selectedTrip: row } });
+                }
+                if (isRoundTrip !== true) {
+                    nav('/employee/ChooseSeatOneWay', { state: { selectedTrip: row } });
+                }}
+        else
+            {
+                if (isRoundTrip === true) {
+                    nav(`/admin/ChooseSeatRoundTrip`, { state: { selectedTrip: row } });
+                }
+                if (isRoundTrip !== true) {
+                    nav('/admin/ChooseSeatOneWay', { state: { selectedTrip: row } });
+                }}
+};
     const calculateArrivalTime = (departureTime, duration) => {
         if (typeof duration !== 'string') {
             console.error('Duration is not a string:', duration);

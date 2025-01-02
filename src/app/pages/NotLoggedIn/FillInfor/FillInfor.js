@@ -64,6 +64,8 @@ const FillInfor = () => {
         } else {
             alert("Vui lòng xác nhận chấp nhận điều khoản và quy định trước khi thanh toán.");
         }
+        alert("Vui lòng đăng nhập trước thực hiện khi thanh toán.");
+
     }
 
     const handleOpenPaymentBox = () => {

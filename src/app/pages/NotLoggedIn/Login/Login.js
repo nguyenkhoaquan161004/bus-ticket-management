@@ -27,6 +27,8 @@ const Login = () => {
         console.log(response.data.accountId);
          if ( response.data.accountId) {
         localStorage.setItem("accountId", response.data.accountId );
+        localStorage.setItem("accountType", accountType );
+
       }  
 
         if (accountType === "Customer") {
