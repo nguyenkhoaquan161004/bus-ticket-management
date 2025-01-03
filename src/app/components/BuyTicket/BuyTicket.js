@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
 import styles from "./BuyTicket.module.css";
-import { Navigate } from "react-router-dom";
-import { TicketContext } from "../../modules/TicketContext";
-
-import ChooseRound from "./ChooseRound";
+import { Navigate } from 'react-router-dom';
+import { TicketContext } from '../../modules/TicketContext';
+import axios from 'axios';
+import ChooseRound from './ChooseRound';
 
 function resultData(
   id,
@@ -33,226 +33,29 @@ function resultData(
 }
 
 const rows = [
-  resultData(
-    1,
-    "Hà Nội",
-    "08:00",
-    "Thành phố Hồ Chí Minh",
-    "16:00",
-    0,
-    "2024-12-05",
-    30,
-    500000
-  ),
-  resultData(
-    2,
-    "Đà Nẵng",
-    "09:00",
-    "Huế",
-    "12:00",
-    0,
-    "2024-12-05",
-    20,
-    200000
-  ),
-  resultData(
-    3,
-    "Nha Trang",
-    "14:00",
-    "Đà Lạt",
-    "18:00",
-    0,
-    "2024-12-06",
-    25,
-    300000
-  ),
-  resultData(
-    4,
-    "Vũng Tàu",
-    "07:00",
-    "Cần Thơ",
-    "13:00",
-    0,
-    "2024-12-06",
-    15,
-    450000
-  ),
-  resultData(
-    5,
-    "Hải Phòng",
-    "10:00",
-    "Nam Định",
-    "13:30",
-    0,
-    "2024-12-07",
-    18,
-    250000
-  ),
-  resultData(
-    6,
-    "Quảng Ninh",
-    "06:00",
-    "Lào Cai",
-    "14:00",
-    0,
-    "2024-12-07",
-    12,
-    600000
-  ),
-  resultData(
-    7,
-    "Bắc Giang",
-    "15:00",
-    "Phú Thọ",
-    "17:30",
-    0,
-    "2024-12-08",
-    28,
-    150000
-  ),
-  resultData(
-    8,
-    "Hà Nội",
-    "11:00",
-    "Hải Dương",
-    "13:00",
-    0,
-    "2024-12-08",
-    22,
-    200000
-  ),
-  resultData(
-    9,
-    "Đồng Nai",
-    "09:00",
-    "Tây Ninh",
-    "12:00",
-    0,
-    "2024-12-09",
-    30,
-    350000
-  ),
-  resultData(
-    10,
-    "Cần Thơ",
-    "13:00",
-    "Sóc Trăng",
-    "15:00",
-    0,
-    "2024-12-09",
-    10,
-    100000
-  ),
-  resultData(
-    11,
-    "Thành phố Hồ Chí Minh",
-    "10:00",
-    "Hà Nội",
-    "18:00",
-    0,
-    "2024-12-06",
-    25,
-    500000
-  ),
-  resultData(
-    12,
-    "Huế",
-    "13:00",
-    "Đà Nẵng",
-    "16:00",
-    0,
-    "2024-12-05",
-    15,
-    200000
-  ),
-  resultData(
-    13,
-    "Đà Lạt",
-    "09:00",
-    "Nha Trang",
-    "13:00",
-    0,
-    "2024-12-06",
-    20,
-    300000
-  ),
-  resultData(
-    14,
-    "Cần Thơ",
-    "14:00",
-    "Vũng Tàu",
-    "20:00",
-    0,
-    "2024-12-06",
-    10,
-    450000
-  ),
-  resultData(
-    15,
-    "Nam Định",
-    "08:00",
-    "Hải Phòng",
-    "11:30",
-    0,
-    "2024-12-07",
-    18,
-    250000
-  ),
-  resultData(
-    16,
-    "Lào Cai",
-    "15:00",
-    "Quảng Ninh",
-    "23:00",
-    0,
-    "2024-12-07",
-    12,
-    600000
-  ),
-  resultData(
-    17,
-    "Phú Thọ",
-    "18:00",
-    "Bắc Giang",
-    "20:30",
-    0,
-    "2024-12-08",
-    28,
-    150000
-  ),
-  resultData(
-    18,
-    "Hải Dương",
-    "14:00",
-    "Hà Nội",
-    "16:00",
-    0,
-    "2024-12-08",
-    22,
-    200000
-  ),
-  resultData(
-    19,
-    "Tây Ninh",
-    "13:00",
-    "Đồng Nai",
-    "16:00",
-    0,
-    "2024-12-09",
-    30,
-    350000
-  ),
-  resultData(
-    20,
-    "Sóc Trăng",
-    "16:00",
-    "Cần Thơ",
-    "18:00",
-    0,
-    "2024-12-09",
-    10,
-    100000
-  ),
+    // Outbound trips
+    resultData(1, 'Hà Nội', '08:00', 'Thành phố Hồ Chí Minh', '16:00', 0, '2024-12-05', 30, 500000),
+    resultData(2, 'Đà Nẵng', '09:00', 'Huế', '12:00', 0, '2024-12-05', 20, 200000),
+    resultData(3, 'Nha Trang', '14:00', 'Đà Lạt', '18:00', 0, '2024-12-06', 25, 300000),
+    resultData(4, 'Vũng Tàu', '07:00', 'Cần Thơ', '13:00', 0, '2024-12-06', 15, 450000),
+    resultData(5, 'Hải Phòng', '10:00', 'Nam Định', '13:30', 0, '2024-12-07', 18, 250000),
+    resultData(6, 'Quảng Ninh', '06:00', 'Lào Cai', '14:00', 0, '2024-12-07', 12, 600000),
+    resultData(7, 'Bắc Giang', '15:00', 'Phú Thọ', '17:30', 0, '2024-12-08', 28, 150000),
+    resultData(8, 'Hà Nội', '11:00', 'Hải Dương', '13:00', 0, '2024-12-08', 22, 200000),
+    resultData(9, 'Đồng Nai', '09:00', 'Tây Ninh', '12:00', 0, '2024-12-09', 30, 350000),
+    resultData(10, 'Cần Thơ', '13:00', 'Sóc Trăng', '15:00', 0, '2024-12-09', 10, 100000),
+
+    // Return trips
+    resultData(11, 'Thành phố Hồ Chí Minh', '10:00', 'Hà Nội', '18:00', 0, '2024-12-06', 25, 500000),
+    resultData(12, 'Huế', '13:00', 'Đà Nẵng', '16:00', 0, '2024-12-05', 15, 200000),
+    resultData(13, 'Đà Lạt', '09:00', 'Nha Trang', '13:00', 0, '2024-12-06', 20, 300000),
+    resultData(14, 'Cần Thơ', '14:00', 'Vũng Tàu', '20:00', 0, '2024-12-06', 10, 450000),
+    resultData(15, 'Nam Định', '08:00', 'Hải Phòng', '11:30', 0, '2024-12-07', 18, 250000),
+    resultData(16, 'Lào Cai', '15:00', 'Quảng Ninh', '23:00', 0, '2024-12-07', 12, 600000),
+    resultData(17, 'Phú Thọ', '18:00', 'Bắc Giang', '20:30', 0, '2024-12-08', 28, 150000),
+    resultData(18, 'Hải Dương', '14:00', 'Hà Nội', '16:00', 0, '2024-12-08', 22, 200000),
+    resultData(19, 'Tây Ninh', '13:00', 'Đồng Nai', '16:00', 0, '2024-12-09', 30, 350000),
+    resultData(20, 'Sóc Trăng', '16:00', 'Cần Thơ', '18:00', 0, '2024-12-09', 10, 100000),
 ];
 
 function capitalizeWords(str) {
@@ -330,85 +133,131 @@ const BuyTicket = () => {
       );
     });
 
-    if (returnResults.length === 0) {
-      setNoResultsReturnFound(true);
-    } else {
-      setNoResultsReturnFound(false);
-      setFilteredRowsReturn(returnResults);
-      setLocationFromTo(
-        capitalizeWords(`${searchLoactionTo} - ${searchLoactionFrom}`)
-      );
-    }
-    setIsResultOpen(true);
-  };
+        if (returnResults.length === 0) {
+            setNoResultsReturnFound(true);
+        } else {
+            setNoResultsReturnFound(false);
+            setFilteredRowsReturn(returnResults);
+            setLocationFromTo(capitalizeWords(`${searchLoactionTo} - ${searchLoactionFrom}`));
+        }
+        setIsResultOpen(true);
+    };
 
-  const handleSearchButtonClick = () => {
-    if (isRoundTrip) {
-      if (
-        !searchLoactionFrom ||
-        !searchLoactionTo ||
-        !searchDateTimeFrom ||
-        !searchDateTimeTo ||
-        !searchFreeSeat
-      ) {
-        alert("Vui lòng nhập đủ thông tin tìm kiếm");
-        return;
-      }
-      handleSearchOutbound();
-      handleSearchReturn();
-    } else {
-      if (
-        !searchLoactionFrom ||
-        !searchLoactionTo ||
-        !searchDateTimeFrom ||
-        !searchFreeSeat
-      ) {
-        alert("Vui lòng nhập đủ thông tin tìm kiếm");
-        return;
-      }
-      handleSearchOutbound();
-    }
-  };
 
-  const handleTripSelected = (trip) => {
-    setSelectedTrip(trip);
-  };
 
-  return (
-    <div>
-      <div>
-        <div className={styles.fillInputSpace}>
-          {/* SWITCH */}
-          <div className={styles.switchRoundTrip}>
-            <p className="uiSemibold">Khứ hồi</p>
-            <div onClick={toggleRoundTrip} style={{ textAlign: "center" }}>
-              <div
-                style={{
-                  display: "inline-block",
-                  width: "60px",
-                  height: "30px",
-                  borderRadius: "30px",
-                  backgroundColor: isRoundTrip ? "#D7987D" : "grey",
-                  position: "relative",
-                  cursor: "pointer",
-                  transition: "background-color 0.3s",
-                }}
-              >
-                <div
-                  style={{
-                    width: "26px",
-                    height: "26px",
-                    borderRadius: "50%",
-                    backgroundColor: "white",
-                    position: "absolute",
-                    top: "2px",
-                    left: isRoundTrip ? "32px" : "2px",
-                    transition: "left 0.3s",
-                  }}
-                ></div>
-              </div>
-            </div>
-          </div>
+
+    const handleTripSelected = (trip) => {
+        setSelectedTrip(trip);
+    };
+    const handleSearchButtonClick = async () => {
+        if (isRoundTrip) {
+            if (!searchLoactionFrom || !searchLoactionTo || !searchDateTimeFrom || !searchDateTimeTo || !searchFreeSeat) {
+                alert('Vui lòng nhập đủ thông tin tìm kiếm');
+                return;
+            }
+            try {
+                // Tìm kiếm outbound (chuyến đi)
+                const outboundResponse = await axios.get('http://localhost:5278/api/bookticket/search', {
+                    params: {
+                        departPlace: searchLoactionFrom,
+                        arrivalPlace: searchLoactionTo,
+                        departureDate: searchDateTimeFrom,
+                        ticketCount: searchFreeSeat,
+                    }
+                });
+                
+                if (outboundResponse.data.length === 0) {
+                    setNoResultsOutboundFound(true);
+                } else {
+                    setNoResultsOutboundFound(false);
+                    setFilteredRowsOutbound(outboundResponse.data);
+                }
+
+                // Tìm kiếm return (chuyến về)
+                const returnResponse = await axios.get('http://localhost:5278/api/bookticket/search', {
+                    params: {
+                        departPlace: searchLoactionTo,
+                        arrivalPlace: searchLoactionFrom,
+                        departureDate: searchDateTimeTo,
+                        ticketCount: searchFreeSeat,
+                    }
+                });
+                
+                if (returnResponse.data.length === 0) {
+                    setNoResultsReturnFound(true);
+                } else {
+                    setNoResultsReturnFound(false);
+                    setFilteredRowsReturn(returnResponse.data);
+                }
+                
+                setIsResultOpen(true);
+            } catch (error) {
+                alert('Đã có lỗi xảy ra khi gọi API');
+            }
+        } else {
+            // Tìm kiếm cho chuyến đi một chiều
+            if (!searchLoactionFrom || !searchLoactionTo || !searchDateTimeFrom || !searchFreeSeat) {
+                alert('Vui lòng nhập đủ thông tin tìm kiếm');
+                return;
+            }
+            try {
+                const response = await axios.get('http://localhost:5278/api/bookticket/search', {
+                    params: {
+                        departPlace: searchLoactionFrom,
+                        arrivalPlace: searchLoactionTo,
+                        departureDate: searchDateTimeFrom,
+                        ticketCount: searchFreeSeat,
+                    }
+                });
+console.log(response.data);
+                if (response.data.length === 0) {
+                    setNoResultsOutboundFound(true);
+                } else {
+                    setNoResultsOutboundFound(false);
+                    setFilteredRowsOutbound(response.data);
+                }
+                
+                setIsResultOpen(true);
+            } catch (error) {
+                alert('Đã có lỗi xảy ra khi gọi API');
+            }
+        }
+    };
+    return (
+        <div>
+            <div>
+                <div className={styles.fillInputSpace}>
+                    {/* SWITCH */}
+                    <div className={styles.switchRoundTrip}>
+                        <p className='uiSemibold'>Khứ hồi</p>
+                        <div onClick={toggleRoundTrip} style={{ textAlign: 'center' }}>
+                            <div
+                                style={{
+                                    display: 'inline-block',
+                                    width: '60px',
+                                    height: '30px',
+                                    borderRadius: '30px',
+                                    backgroundColor: isRoundTrip ? '#D7987D' : 'grey',
+                                    position: 'relative',
+                                    cursor: 'pointer',
+                                    transition: 'background-color 0.3s',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        width: '26px',
+                                        height: '26px',
+                                        borderRadius: '50%',
+                                        backgroundColor: 'white',
+                                        position: 'absolute',
+                                        top: '2px',
+                                        left: isRoundTrip ? '32px' : '2px',
+                                        transition: 'left 0.3s',
+                                    }}
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
 
           <div className={styles.fillSearchRoundInfor}>
             <div className={styles.itemInforBasic}>
