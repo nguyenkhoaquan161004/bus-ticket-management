@@ -131,10 +131,10 @@ const SignUp = () => {
           ></input>
         </div>
         <div className={styles.inputItem}>
-          <p className="uiSemibold">CCCD</p>
+          <p className="uiSemibold">Email</p>
           <input
             type="text"
-            placeholder="CCCD"
+            placeholder="Email"
             value={accountID}
             onChange={(e) => setAccountID(e.target.value)}
           ></input>
