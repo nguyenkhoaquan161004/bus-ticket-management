@@ -4,34 +4,40 @@ import { useNavigate } from 'react-router-dom';
 
 const ChooseRound = ({ rows, isRoundTrip }) => {
     const nav = useNavigate();
+    const [selectedTrips, setSelectedTrips] = useState([]); // Trạng thái lưu chuyến đi/chuyến về
 
-    // Hàm xử lý khi chọn chuyến
+    const accountType = localStorage.getItem("accountType");
+
     const onChooseTrip = (row) => {
-        const accountType = localStorage.getItem("accountType")
-        if(accountType==="Customer"){
-        if (isRoundTrip === true) {
-            nav(`/customer/ChooseSeatRoundTrip`, { state: { selectedTrip: row } });
+        if (isRoundTrip) {
+            if (selectedTrips.length === 0) {
+                // Chọn chuyến đi
+                setSelectedTrips([row]);
+                alert("Chọn chuyến về");
+            } else if (selectedTrips.length === 1) {
+                // Chọn chuyến về
+                const updatedTrips = [...selectedTrips, row];
+                setSelectedTrips(updatedTrips);
+
+                // Chuyển hướng sau khi chọn đủ 2 chuyến
+                const routePrefix = accountType === "Customer" 
+                    ? '/customer' 
+                    : accountType === "Ticketcletk" 
+                    ? '/employee' 
+                    : '/admin';
+                nav(`${routePrefix}/ChooseSeatRoundTrip`, { state: { selectedTrips: updatedTrips } });
+            }
+        } else {
+            // Không phải khứ hồi, chọn 1 chuyến duy nhất
+            const routePrefix = accountType === "Customer" 
+                ? '/customer' 
+                : accountType === "Ticketcletk" 
+                ? '/employee' 
+                : '/admin';
+            nav(`${routePrefix}/ChooseSeatOneWay`, { state: { selectedTrip: row } });
         }
-        if (isRoundTrip !== true) {
-            nav('/customer/ChooseSeatOneWay', { state: { selectedTrip: row } });
-        }}
-        else if(accountType==="Ticketcletk")
-            {
-                if (isRoundTrip === true) {
-                    nav(`/employee/ChooseSeatRoundTrip`, { state: { selectedTrip: row } });
-                }
-                if (isRoundTrip !== true) {
-                    nav('/employee/ChooseSeatOneWay', { state: { selectedTrip: row } });
-                }}
-        else
-            {
-                if (isRoundTrip === true) {
-                    nav(`/admin/ChooseSeatRoundTrip`, { state: { selectedTrip: row } });
-                }
-                if (isRoundTrip !== true) {
-                    nav('/admin/ChooseSeatOneWay', { state: { selectedTrip: row } });
-                }}
-};
+    };
+
     const calculateArrivalTime = (departureTime, duration) => {
         if (typeof duration !== 'string') {
             console.error('Duration is not a string:', duration);
@@ -45,16 +51,18 @@ const ChooseRound = ({ rows, isRoundTrip }) => {
 
         return departureDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
+
     const formatTime = (time) => {
         const date = new Date(time);
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     };
+
     const formatDuration = (duration) => {
         if (!duration) return '';
         const [hours, minutes] = duration.split(':');
         return `${hours} giờ ${minutes} phút`;
     };
-    
+
     return (
         <div>
             <div className={styles.resultList}>
@@ -72,7 +80,7 @@ const ChooseRound = ({ rows, isRoundTrip }) => {
                                 </div>
                                 <div className={styles.fromTo}>
                                     <p className='p1'>{calculateArrivalTime(row.departureTime, row.duration)}</p>
-                                    <p className='p3' style={{ textAlign: "center" }}>{row.arrivalPlace }</p>
+                                    <p className='p3' style={{ textAlign: "center" }}>{row.arrivalPlace}</p>
                                 </div>
                             </div>
 

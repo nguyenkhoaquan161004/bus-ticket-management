@@ -38,6 +38,9 @@ export default function Header() {
           <button onClick={() => nav("/employee/SearchTicket")}>
             <p className="uiSemibold">TRA CỨU</p>
           </button>
+          <button onClick={() => nav("/employee/NotificationList")}>
+            <p className="uiSemibold">THÔNG BÁO</p>
+          </button>
         </nav>
       </div>
       <div className={styles.generalButton}>

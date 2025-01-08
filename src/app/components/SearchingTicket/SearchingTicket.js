@@ -4,22 +4,33 @@ import clsx from 'clsx';
 import { EmployeeContext } from '../../modules/EmployeeContext';
 import rows from '../../assets/TicketInformations';
 import zIndex from '@mui/material/styles/zIndex';
+import { jsPDF } from 'jspdf';
 import { Navigate, useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
 const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }) => {
-    const [searchIdTicket, setSearchIdTicket] = useState('');
-    const [filteredRows, setFilteredRows] = useState(rows);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [ticketCode, setTicketCode] = useState('');  
+    const [row, setFilteredRows] = useState(null);
     const [isResultOpen, setIsResultOpen] = useState(false);
     const { isEmployee } = useContext(EmployeeContext);
+    const [error, setError] = useState(null);
 
     const [isPrintBoxOpen, setIsPrintBoxOpen] = useState(false);
     const [isChangeTicketBoxOpen, setIsChangeTicketBoxOpen] = useState(false);
 
     const nav = useNavigate();
 
-    const handleSearch = () => {
-        const result = rows.filter(row => row.id.toString() === searchIdTicket);
-        setFilteredRows(result);
+    const handleSearch = async() => {
+        try {
+            const response = await axios.get(`http://localhost:5278/check-ticket/${ticketCode}/${phoneNumber}`);
+            setFilteredRows(response.data);  
+           console.log(response.data);  
+
+            setError(null);  
+          } catch (error) {
+            setError('Không tìm thấy vé hoặc số điện thoại không khớp.');
+          }
+        // const result = rows.filter(row => row.id.toString() === searchIdTicket);
     }
 
     const handleResultOpen = () => {
@@ -38,7 +49,28 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
 
     const handleClosePrintBox = () => {
         setIsPrintBoxOpen(false);
-        onPrintBoxStateChange(false); // Gửi trạng thái lên cha
+        onPrintBoxStateChange(false);
+
+    };
+    const handlePrint = () => {
+        setIsPrintBoxOpen(false);
+        onPrintBoxStateChange(false);
+        const noDi = removeVietnameseTones(row.departure);
+    const noDen = removeVietnameseTones(row.destination);
+    const doc = new jsPDF('p', 'mm', 'a6'); 
+
+   
+    doc.setFontSize(12); 
+  
+    doc.text(`Ma ve: ${row.ticketId}`, 10, 20); 
+    doc.text(`So ghe: ${row.seatNumber}`, 10, 30);
+    doc.text(`Noi di: ${noDi}`, 10, 40);
+    doc.text(`Noi den: ${noDen}`, 10, 50);
+    doc.text(`Gio khoi hanh: ${row.departureTime}`, 10, 60);
+    doc.text(`So xe: ${row.busNumber}`, 10, 70);
+    doc.text(`Bien so xe: ${row.licensePlate}`, 10, 80);
+  
+    doc.save(`ticket-${row.ticketId}.pdf`);
     };
 
     const handleOpenChangeTicketBox = () => {
@@ -50,7 +82,38 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
         setIsChangeTicketBoxOpen(false);
         onChangeTicketBoxStateChange(false); // Gửi trạng thái lên cha
     };
-
+    const removeVietnameseTones = (str) => {
+        const vietKey = [
+          'aáàạảãâấầậẩẫăắằặẳẵ',
+          'eéèẹẻẽêếềệểễ',
+          'iíìịỉĩ',
+          'oóòọỏõôốồộổỗơớờợởỡ',
+          'uúùụủũôốồộổỗơớờợởỡ',
+          'yýỳỵỷỹ',
+          'dđ'
+        ];
+        
+        const vietChars = [
+          'a', 'e', 'i', 'o', 'u', 'y', 'd'
+        ];
+      
+        for (let i = 0; i < vietKey.length; i++) {
+          const re = new RegExp('[' + vietKey[i] + ']', 'g');
+          str = str.replace(re, vietChars[i]);
+        }
+      
+        return str;
+      };
+      const handleCancel = async () => {
+        try {
+          const response = await axios.post(`http://localhost:5278/cancel-ticket-request/${row.ticketId}`);
+          if (response.data.message) {
+            alert(response.data.message); 
+          }
+        } catch (error) {
+          alert("Error request canceling ticket: " + error.message);
+        }
+      }; 
     return (
         <div >
             <div className={styles.searchingTicketSpace}>
@@ -59,15 +122,17 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
                     <div className={styles.inputTicketFill}>
                         <div className={styles.inputFillContainer}>
                             <p className='uiSemibold'>Số điện thoại</p>
-                            <input type="text" className={styles.inputFill}></input>
+                            <input type="text" className={styles.inputFill} value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}></input>
                         </div>
                         <div className={styles.inputFillContainer}>
                             <p className='uiSemibold'>Mã vé</p>
                             <input
                                 type="text"
                                 className={styles.inputFill}
-                                value={searchIdTicket}
-                                onChange={(e) => setSearchIdTicket(e.target.value)}></input>
+                                placeholder="0xx xxx xxxx"
+              value={ticketCode}
+              onChange={(e) => setTicketCode(e.target.value)}></input>
                         </div>
                     </div>
                     <button onClick={handleSearchButtonClick}><h4>Tra cứu</h4></button>
@@ -79,39 +144,38 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
             {/* RESEARCH RESULT */}
             {isResultOpen && (<div className={styles.researchResultContainer} >
                 <h3 style={{ marginTop: 50, textAlign: "center" }}>KẾT QUẢ TRUY XUẤT</h3>
-
+                {row  !=null ? (
                 <div className={styles.resultList}>
-                    {filteredRows.map((row, i) => {
-                        return (
-                            <div key={i} className={styles.resultItemContainer}>
+                    
+                            <div  className={styles.resultItemContainer}>
                                 <div className={styles.resultItem}>
                                     <div className={styles.infoField}>
                                         <p className={clsx(styles.topicField, 'uiSemibold')}>Mã vé</p>
-                                        <p className={clsx(styles.contentField, 'p3')}>{row.id}</p>
+                                        <p className={clsx(styles.contentField, 'p3')}>{row.ticketId}</p>
                                     </div>
                                     <div className={styles.infoField}>
                                         <p className={clsx(styles.topicField, 'uiSemibold')}>Số ghế</p>
-                                        <p className={clsx(styles.contentField, 'p3')}>{row.numberOfSeat}</p>
+                                        <p className={clsx(styles.contentField, 'p3')}>{row.seatNumber}</p>
                                     </div>
                                     <div className={styles.infoField}>
                                         <p className={clsx(styles.topicField, 'uiSemibold')}>Điểm đi</p>
-                                        <p className={clsx(styles.contentField, 'p3')}>{row.locationFrom}</p>
+                                        <p className={clsx(styles.contentField, 'p3')}>{row.departure}</p>
                                     </div>
                                     <div className={styles.infoField}>
                                         <p className={clsx(styles.topicField, 'uiSemibold')}>Điểm đến</p>
-                                        <p className={clsx(styles.contentField, 'p3')}>{row.locationTo}</p>
+                                        <p className={clsx(styles.contentField, 'p3')}>{row.destination}</p>
                                     </div>
                                     <div className={styles.infoField}>
                                         <p className={clsx(styles.topicField, 'uiSemibold')}>Thời gian khởi hành</p>
-                                        <p className={clsx(styles.contentField, 'p3')}>{row.dateTime}</p>
+                                        <p className={clsx(styles.contentField, 'p3')}>{row.departureTime}</p>
                                     </div>
                                     <div className={styles.infoField}>
                                         <p className={clsx(styles.topicField, 'uiSemibold')}>Số xe</p>
-                                        <p className={clsx(styles.contentField, 'p3')}>{row.numberOfCar}</p>
+                                        <p className={clsx(styles.contentField, 'p3')}>{row.busNumber}</p>
                                     </div>
                                     <div className={styles.infoField}>
                                         <p className={clsx(styles.topicField, 'uiSemibold')}>Biển số xe</p>
-                                        <p className={clsx(styles.contentField, 'p3')}>{row.idCar}</p>
+                                        <p className={clsx(styles.contentField, 'p3')}>{row.licensePlate}</p>
                                     </div>
                                 </div>
                                 <div className={styles.buttonField}>
@@ -123,7 +187,7 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
                                         <button style={{ background: '#D7987D' }}
                                             onClick={handleOpenChangeTicketBox}><p className='uiSemibold'>Đổi vé</p></button>
                                     )}
-                                    <button style={{ background: '#D24F4F' }}><p className='uiSemibold'>Hủy vé</p></button>
+                                    <button style={{ background: '#D24F4F' }}  onClick={handleCancel}><p className='uiSemibold'>Hủy vé</p></button>
                                 </div>
                                 {(isPrintBoxOpen || isChangeTicketBoxOpen) && (
                                     <div className={styles.boxBackground}>
@@ -138,51 +202,45 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
                                                         <div className={styles.inforTicket}>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Mã vé: </h4>
-                                                                <p className='p2'>{row.id}</p>
+                                                                <p className='p2'>{row.ticketId}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Số ghế:</h4>
-                                                                <p className='p2'>{row.numberOfSeat}</p>
+                                                                <p className='p2'>{row.seatNumber}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Chuyến xe:</h4>
-                                                                <p className='p2'>{row.locationFrom} - {row.locationTo}</p>
+                                                                <p className='p2'>{row.departure} - {row.destination}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Giờ khởi hành:</h4>
-                                                                <p className='p2'>{row.dateTime}</p>
+                                                                <p className='p2'>{row.departureTime}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Số xe:</h4>
-                                                                <p className='p2'>{row.numberOfCar}</p>
+                                                                <p className='p2'>{row.busNumber}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Biển số xe:</h4>
-                                                                <p className='p2'>{row.idCar}</p>
+                                                                <p className='p2'>{row.licensePlate}</p>
                                                             </div>
                                                         </div>
                                                         <hr />
                                                         <div className={styles.costTicket}>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Giá vé:</h4>
-                                                                <p className='p2'>{row.cost}VND</p>
+                                                                <p className='p2'>{row.price}VND</p>
                                                             </div>
-                                                            <div className={styles.itemInfor}>
-                                                                <h4>Giảm giá:</h4>
-                                                                <p className='p2'>{row.percentDiscount}%</p>
-                                                            </div>
+                                                            
                                                         </div>
                                                         <hr />
-                                                        <div className={styles.totalCostTicket}>
-                                                            <h4>Thành tiền: </h4>
-                                                            <h3 style={{ color: "#D7987D" }}>{row.cost - (row.cost * row.percentDiscount) / 100}VND</h3>
-                                                        </div>
+                                                       
                                                     </div>
                                                     <div className={styles.listOfBtnsContainer}>
                                                         <buton className={clsx("uiSemibold", styles.cancelButton)}
                                                             onClick={handleClosePrintBox}>Hủy</buton>
                                                         <button
-                                                            className={clsx("uiSemibold", styles.printButton)}>In vé</button>
+                                                            className={clsx("uiSemibold", styles.printButton)}           onClick={handlePrint}>In vé</button>
                                                     </div>
                                                 </div>
                                             </div>)
@@ -214,45 +272,39 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
                                                         <div className={styles.inforTicket}>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Mã vé: </h4>
-                                                                <p className='p2'>{row.id}</p>
+                                                                <p className='p2'>{row.ticketId}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Số ghế:</h4>
-                                                                <p className='p2'>{row.numberOfSeat}</p>
+                                                                <p className='p2'>{row.seatNumber}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Chuyến xe:</h4>
-                                                                <p className='p2'>{row.locationFrom} - {row.locationTo}</p>
+                                                                <p className='p2'>{row.departure} - {row.destination}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Giờ khởi hành:</h4>
-                                                                <p className='p2'>{row.dateTime}</p>
+                                                                <p className='p2'>{row.departureTime}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Số xe:</h4>
-                                                                <p className='p2'>{row.numberOfCar}</p>
+                                                                <p className='p2'>{row.busNumber}</p>
                                                             </div>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Biển số xe:</h4>
-                                                                <p className='p2'>{row.idCar}</p>
+                                                                <p className='p2'>{row.licensePlate}</p>
                                                             </div>
                                                         </div>
                                                         <hr />
                                                         <div className={styles.costTicket}>
                                                             <div className={styles.itemInfor}>
                                                                 <h4>Giá vé:</h4>
-                                                                <p className='p2'>{row.cost}VND</p>
+                                                                <p className='p2'>{row.price}VND</p>
                                                             </div>
-                                                            <div className={styles.itemInfor}>
-                                                                <h4>Giảm giá:</h4>
-                                                                <p className='p2'>{row.percentDiscount}%</p>
-                                                            </div>
+                                                            
                                                         </div>
                                                         <hr />
-                                                        <div className={styles.totalCostTicket}>
-                                                            <h4>Thành tiền: </h4>
-                                                            <h3 style={{ color: "#D7987D" }}>{row.cost - (row.cost * row.percentDiscount) / 100}VND</h3>
-                                                        </div>
+                                                        
                                                     </div>
                                                     <div className={styles.listOfBtnsContainer}>
                                                         <buton className={clsx("uiSemibold", styles.cancelButton)}
@@ -268,9 +320,12 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
                                     </div>)}
                             </div>
 
-                        )
-                    })}
+                        
+                    
                 </div>
+                 ) : (
+                    <p>No results found</p>  // Display a message if no results are found
+                )}
             </div>)}
 
 

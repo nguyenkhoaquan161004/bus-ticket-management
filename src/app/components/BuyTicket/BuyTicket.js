@@ -32,31 +32,6 @@ function resultData(
   };
 }
 
-const rows = [
-    // Outbound trips
-    resultData(1, 'Hà Nội', '08:00', 'Thành phố Hồ Chí Minh', '16:00', 0, '2024-12-05', 30, 500000),
-    resultData(2, 'Đà Nẵng', '09:00', 'Huế', '12:00', 0, '2024-12-05', 20, 200000),
-    resultData(3, 'Nha Trang', '14:00', 'Đà Lạt', '18:00', 0, '2024-12-06', 25, 300000),
-    resultData(4, 'Vũng Tàu', '07:00', 'Cần Thơ', '13:00', 0, '2024-12-06', 15, 450000),
-    resultData(5, 'Hải Phòng', '10:00', 'Nam Định', '13:30', 0, '2024-12-07', 18, 250000),
-    resultData(6, 'Quảng Ninh', '06:00', 'Lào Cai', '14:00', 0, '2024-12-07', 12, 600000),
-    resultData(7, 'Bắc Giang', '15:00', 'Phú Thọ', '17:30', 0, '2024-12-08', 28, 150000),
-    resultData(8, 'Hà Nội', '11:00', 'Hải Dương', '13:00', 0, '2024-12-08', 22, 200000),
-    resultData(9, 'Đồng Nai', '09:00', 'Tây Ninh', '12:00', 0, '2024-12-09', 30, 350000),
-    resultData(10, 'Cần Thơ', '13:00', 'Sóc Trăng', '15:00', 0, '2024-12-09', 10, 100000),
-
-    // Return trips
-    resultData(11, 'Thành phố Hồ Chí Minh', '10:00', 'Hà Nội', '18:00', 0, '2024-12-06', 25, 500000),
-    resultData(12, 'Huế', '13:00', 'Đà Nẵng', '16:00', 0, '2024-12-05', 15, 200000),
-    resultData(13, 'Đà Lạt', '09:00', 'Nha Trang', '13:00', 0, '2024-12-06', 20, 300000),
-    resultData(14, 'Cần Thơ', '14:00', 'Vũng Tàu', '20:00', 0, '2024-12-06', 10, 450000),
-    resultData(15, 'Nam Định', '08:00', 'Hải Phòng', '11:30', 0, '2024-12-07', 18, 250000),
-    resultData(16, 'Lào Cai', '15:00', 'Quảng Ninh', '23:00', 0, '2024-12-07', 12, 600000),
-    resultData(17, 'Phú Thọ', '18:00', 'Bắc Giang', '20:30', 0, '2024-12-08', 28, 150000),
-    resultData(18, 'Hải Dương', '14:00', 'Hà Nội', '16:00', 0, '2024-12-08', 22, 200000),
-    resultData(19, 'Tây Ninh', '13:00', 'Đồng Nai', '16:00', 0, '2024-12-09', 30, 350000),
-    resultData(20, 'Sóc Trăng', '16:00', 'Cần Thơ', '18:00', 0, '2024-12-09', 10, 100000),
-];
 
 function capitalizeWords(str) {
   return str
@@ -82,7 +57,7 @@ const BuyTicket = () => {
   const [searchDateTimeTo, setSearchDateTimeTo] = useState("");
   const [searchFreeSeat, setSearchFreeSeat] = useState("");
   const [selectedTrip, setSelectedTrip] = useState("Chuyến đi");
-
+  const [rows, setRows] = useState([]);
   const [filteredRowsOutbound, setFilteredRowsOutbound] = useState(rows);
   const [filteredRowsReturn, setFilteredRowsReturn] = useState(rows);
   const [isResultOpen, setIsResultOpen] = useState(false);
@@ -165,7 +140,9 @@ const BuyTicket = () => {
                         ticketCount: searchFreeSeat,
                     }
                 });
-                
+                console.log(outboundResponse.data);
+                setRows(outboundResponse.data);
+
                 if (outboundResponse.data.length === 0) {
                     setNoResultsOutboundFound(true);
                 } else {
@@ -182,7 +159,8 @@ const BuyTicket = () => {
                         ticketCount: searchFreeSeat,
                     }
                 });
-                
+                console.log(returnResponse.data);
+                setRows(returnResponse.data);
                 if (returnResponse.data.length === 0) {
                     setNoResultsReturnFound(true);
                 } else {
@@ -209,7 +187,8 @@ const BuyTicket = () => {
                         ticketCount: searchFreeSeat,
                     }
                 });
-console.log(response.data);
+console.log(response.data);                setRows(response.data);
+
                 if (response.data.length === 0) {
                     setNoResultsOutboundFound(true);
                 } else {
@@ -419,7 +398,7 @@ console.log(response.data);
               ) : (
                 <ChooseRound
                   rows={filteredRowsOutbound}
-                  isRoundTrip={() => true}
+                  isRoundTrip={() =>false}
                 />
               )}
             </div>
