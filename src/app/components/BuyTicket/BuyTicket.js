@@ -2,8 +2,10 @@ import React, { useContext, useState } from "react";
 import styles from "./BuyTicket.module.css";
 import { Navigate } from 'react-router-dom';
 import { TicketContext } from '../../modules/TicketContext';
+import {ChangeTicketContext} from '../../modules/ChangeTicketContext';
 import axios from 'axios';
 import ChooseRound from './ChooseRound';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function resultData(
   id,
@@ -51,6 +53,11 @@ function normalizeString(str) {
 
 const BuyTicket = () => {
   const { isRoundTrip, toggleRoundTrip } = useContext(TicketContext);
+  const { isChangeTicket, toggleChangeTicket } = useContext(ChangeTicketContext);
+  const location = useLocation();
+  const nav = useNavigate();
+
+  const ChangeTicket = location.state?.ticketChange;
   const [searchLoactionFrom, setSearchLoactionFrom] = useState("");
   const [searchLoactionTo, setSearchLoactionTo] = useState("");
   const [searchDateTimeFrom, setSearchDateTimeFrom] = useState("");
@@ -187,7 +194,7 @@ const BuyTicket = () => {
                         ticketCount: searchFreeSeat,
                     }
                 });
-console.log(response.data);                setRows(response.data);
+                console.log(response.data);   setRows(response.data);
 
                 if (response.data.length === 0) {
                     setNoResultsOutboundFound(true);
@@ -398,7 +405,7 @@ console.log(response.data);                setRows(response.data);
               ) : (
                 <ChooseRound
                   rows={filteredRowsOutbound}
-                  isRoundTrip={() =>false}
+                  isRoundTrip={isRoundTrip}
                 />
               )}
             </div>

@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState,useContext, } from 'react';
 import styles from "./BuyTicket.module.css";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {ChangeTicketContext} from '../../modules/ChangeTicketContext';
+import axios from 'axios';
 
 const ChooseRound = ({ rows, isRoundTrip }) => {
     const nav = useNavigate();
-    const [selectedTrips, setSelectedTrips] = useState([]); // Trạng thái lưu chuyến đi/chuyến về
+    const [selectedTrips, setSelectedTrips] = useState([]); 
+const { isChangeTicket, toggleChangeTicket } = useContext(ChangeTicketContext);
+  const location = useLocation();
 
+  const ChangeTicket = location.state?.ticketChange;
     const accountType = localStorage.getItem("accountType");
 
-    const onChooseTrip = (row) => {
+    const onChooseTrip =async (row) => {
         if (isRoundTrip) {
             if (selectedTrips.length === 0) {
                 // Chọn chuyến đi
@@ -28,13 +33,25 @@ const ChooseRound = ({ rows, isRoundTrip }) => {
                 nav(`${routePrefix}/ChooseSeatRoundTrip`, { state: { selectedTrips: updatedTrips } });
             }
         } else {
-            // Không phải khứ hồi, chọn 1 chuyến duy nhất
-            const routePrefix = accountType === "Customer" 
-                ? '/customer' 
-                : accountType === "Ticketcletk" 
-                ? '/employee' 
-                : '/admin';
-            nav(`${routePrefix}/ChooseSeatOneWay`, { state: { selectedTrip: row } });
+            console.log(ChangeTicket)
+            if(ChangeTicket!=null)
+                {
+                    const response = await axios.post(`http://localhost:5278/change-ticket-request/${ChangeTicket.ticketId}/${row.busBusRouteID}`);
+
+                    if (response.status === 200) {
+                        alert('Gửi yêu cầu thành công');              
+                    }
+                } 
+                else
+                {
+                    const routePrefix = accountType === "Customer" 
+                    ? '/customer' 
+                    : accountType === "Ticketcletk" 
+                    ? '/employee' 
+                    : '/admin';
+                nav(`${routePrefix}/ChooseSeatOneWay`, { state: { selectedTrip: row } });
+                }          
+                 
         }
     };
 

@@ -75,12 +75,12 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
 
     const handleOpenChangeTicketBox = () => {
         setIsChangeTicketBoxOpen(true);
-        onChangeTicketBoxStateChange(true); // Gửi trạng thái lên cha
+        onChangeTicketBoxStateChange(true); 
     };
 
     const handleCloseChangeTicketBox = () => {
         setIsChangeTicketBoxOpen(false);
-        onChangeTicketBoxStateChange(false); // Gửi trạng thái lên cha
+        onChangeTicketBoxStateChange(false);
     };
     const removeVietnameseTones = (str) => {
         const vietKey = [
@@ -183,10 +183,10 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
                                         <button style={{ background: '#2E6B75' }}
                                             onClick={handleOpenPrintBox}><p className='uiSemibold'>In vé</p></button>
                                     )}
-                                    {isEmployee && (
+                                    
                                         <button style={{ background: '#D7987D' }}
                                             onClick={handleOpenChangeTicketBox}><p className='uiSemibold'>Đổi vé</p></button>
-                                    )}
+                                    
                                     <button style={{ background: '#D24F4F' }}  onClick={handleCancel}><p className='uiSemibold'>Hủy vé</p></button>
                                 </div>
                                 {(isPrintBoxOpen || isChangeTicketBoxOpen) && (
@@ -255,18 +255,7 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
                                                 <div className={styles.printFlexBoxContainer}>
                                                     <div className={styles.inforSpaceContainer}>
                                                         <div className={styles.costTicket}>
-                                                            <div className={styles.itemInfor}>
-                                                                <h4>Họ và tên:</h4>
-                                                                <p className='p2'>Tên khách hàng</p>
-                                                            </div>
-                                                            <div className={styles.itemInfor}>
-                                                                <h4>Số điện thoại:</h4>
-                                                                <p className='p2'>0123456789</p>
-                                                            </div>
-                                                            <div className={styles.itemInfor}>
-                                                                <h4>Email:</h4>
-                                                                <p className='p2'>abc@gmail.com</p>
-                                                            </div>
+                                                            
                                                         </div>
                                                         <hr />
                                                         <div className={styles.inforTicket}>
@@ -309,9 +298,20 @@ const SearchingTicket = ({ onPrintBoxStateChange, onChangeTicketBoxStateChange }
                                                     <div className={styles.listOfBtnsContainer}>
                                                         <buton className={clsx("uiSemibold", styles.cancelButton)}
                                                             onClick={handleClosePrintBox}>Hủy</buton>
-                                                        <button
-                                                            className={clsx("uiSemibold", styles.printButton)}
-                                                            onClick={() => nav("/employee/ChangeTicket")}>Đổi vé</button>
+                                                   <button
+                                                        className={clsx("uiSemibold", styles.printButton)}
+                                                        onClick={() => 
+                                                            nav('/employee/ChangeTicket', {
+                                                                state: {
+                                                                    ticketChange: row,
+
+                                                                }
+                                                            })
+                                                        }
+                                                    >
+                                                        Đổi vé
+                                                    </button>
+
                                                     </div>
                                                 </div>
                                             </div>)

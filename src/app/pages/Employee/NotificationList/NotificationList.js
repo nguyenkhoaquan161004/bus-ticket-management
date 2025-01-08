@@ -39,7 +39,7 @@ const NotificationList = () => {
         cancelTicket(notificationId); 
       } else if (selectedNotification.message.includes('Request to change ticket')) {
         if (selectedNotification.notificationID) {
-          navigate(`/ticketclerk/changeTicket/${selectedNotification.notificationID}`);
+          navigate(`/employee/ChooseSeatOneWay/`, { state: { selectedNotification:selectedNotification } });
         } else {
           console.error('Missing notificationID');
         }
