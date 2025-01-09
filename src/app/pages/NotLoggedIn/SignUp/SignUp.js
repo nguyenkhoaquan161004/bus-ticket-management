@@ -49,19 +49,13 @@ const SignUp = () => {
         },
         body: JSON.stringify(accountData),
       });
-
-      alert(JSON.stringify(accountData));
+      console.log(JSON.stringify(accountData));
 
       if (response.ok) {
         alert("Đăng ký thành công!");
         navigate("/login");
       } else {
-        const errorData = await response.json();
-        alert(
-          `Đăng ký thất bại! Status: ${response.status}, Message: ${
-            errorData.message || "No message provided"
-          }`
-        );
+        alert(`Đăng ký thất bại!`);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -98,8 +92,8 @@ const SignUp = () => {
               onChange={handleChange}
             >
               <option value="">Lựa chọn</option>
-              <option value="male">Nam</option>
-              <option value="female">Nữ</option>
+              <option value="Nam">Nam</option>
+              <option value="Nữ">Nữ</option>
             </select>
           </div>
         </div>
@@ -131,10 +125,10 @@ const SignUp = () => {
           ></input>
         </div>
         <div className={styles.inputItem}>
-          <p className="uiSemibold">Email</p>
+          <p className="uiSemibold">CCCD</p>
           <input
             type="text"
-            placeholder="Email"
+            placeholder="CCCD"
             value={accountID}
             onChange={(e) => setAccountID(e.target.value)}
           ></input>

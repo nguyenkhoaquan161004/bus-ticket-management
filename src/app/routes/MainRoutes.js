@@ -9,7 +9,10 @@ import Footer from "../layouts/Footer";
 import PageNotFound from "../layouts/PageNotFound";
 import { TicketProvider } from "../modules/TicketContext";
 import { EmployeeContext, EmployeeProvider } from "../modules/EmployeeContext";
-import { ChangeTicketProvider, ChangeTicketContext } from "../modules/ChangeTicketContext";
+import {
+  ChangeTicketProvider,
+  ChangeTicketContext,
+} from "../modules/ChangeTicketContext";
 
 import NotLoggedInChooseSeatOneWay from "../pages/NotLoggedIn/ChooseSeatOneWay";
 import NotLoggedInChooseSeatRoundTrip from "../pages/NotLoggedIn/ChooseSeatRoundTrip";
@@ -38,7 +41,7 @@ import EmployeeChooseSeatRoundTrip from "../pages/Employee/ChooseSeatRoundTrip";
 import EmployeeSearchTicket from "../pages/Employee/SearchTicket";
 import EmployeeStartScreen from "../pages/Employee/Start";
 import EmployeeFillInfor from "../pages/Employee/FillInfor";
-import NotificationList from "../pages/Employee/NotificationList"
+import NotificationList from "../pages/Employee/NotificationList";
 function Header() {
   const location = useLocation();
 
@@ -66,10 +69,14 @@ function EmployeeHandler() {
 
 function ChangeTicketHandler() {
   const location = useLocation();
-  const { toggleChangeTicket, isChangeTicket } = useContext(ChangeTicketContext);
+  const { toggleChangeTicket, isChangeTicket } =
+    useContext(ChangeTicketContext);
 
   useEffect(() => {
-    if (location.pathname.includes("/employee/ChangeTicket") && !isChangeTicket) {
+    if (
+      location.pathname.includes("/employee/ChangeTicket") &&
+      !isChangeTicket
+    ) {
       toggleChangeTicket();
     }
   }, [location.pathname, isChangeTicket, toggleChangeTicket]);
@@ -86,41 +93,103 @@ export default function MainRoutes() {
             <Routes>
               {/* NOT LOGGED IN */}
               <Route path="/" element={<StartScreen />} />
-              <Route path="/ChooseSeatOneWay" element={<NotLoggedInChooseSeatOneWay />} />
-              <Route path="/ChooseSeatRoundTrip" element={<NotLoggedInChooseSeatRoundTrip />} />
-              <Route path="/FillInfor" element={<NotLoggedInFillInforOneWay />} />
-              <Route path="/SearchTicket" element={<NotLoggedInSearchTicket />} />
+              <Route
+                path="/ChooseSeatOneWay"
+                element={<NotLoggedInChooseSeatOneWay />}
+              />
+              <Route
+                path="/ChooseSeatRoundTrip"
+                element={<NotLoggedInChooseSeatRoundTrip />}
+              />
+              <Route
+                path="/FillInfor"
+                element={<NotLoggedInFillInforOneWay />}
+              />
+              <Route
+                path="/SearchTicket"
+                element={<NotLoggedInSearchTicket />}
+              />
               <Route path="/SignUp" element={<SignUp />} />
               <Route path="/Login" element={<Login />} />
               <Route path="*" element={<PageNotFound />} />
 
               {/* CUSTOMER */}
               <Route path="/customer" element={<StartScreen />} />
-              <Route path="/customer/ChooseSeatOneWay" element={<CustomerChooseSeatOneWay />} />
-              <Route path="/customer/ChooseSeatRoundTrip" element={<CustomerChooseSeatRoundTrip />} />
-              <Route path="/customer/FillInfor" element={<CustomerFillInforOneWay />} />
-              <Route path="/customer/SearchTicket" element={<CustomerSearchTicket />} />
+              <Route
+                path="/customer/ChooseSeatOneWay"
+                element={<CustomerChooseSeatOneWay />}
+              />
+              <Route
+                path="/customer/ChooseSeatRoundTrip"
+                element={<CustomerChooseSeatRoundTrip />}
+              />
+              <Route
+                path="/customer/FillInfor"
+                element={<CustomerFillInforOneWay />}
+              />
+              <Route
+                path="/customer/SearchTicket"
+                element={<CustomerSearchTicket />}
+              />
               <Route path="/customer/History" element={<CustomerHistory />} />
-
 
               {/* EMPLOYEE */}
               <Route path="/employee" element={<EmployeeStartScreen />} />
-              <Route path="/employee/ChooseSeatOneWay" element={<EmployeeChooseSeatOneWay />} />
-              <Route path="/employee/ChooseSeatRoundTrip" element={<EmployeeChooseSeatRoundTrip />} />
-              <Route path="/employee/ChangeTicket/ChooseSeatOneWay" element={<EmployeeChooseSeatOneWay />} />
-              <Route path="/employee/ChangeTicket/ChooseSeatRoundTrip" element={<EmployeeChooseSeatRoundTrip />} />
-              <Route path="/employee/SearchTicket" element={<EmployeeSearchTicket />} />
-              <Route path="/employee/ChangeTicket" element={<EmployeeChangeTicket />} />
-              <Route path="/employee/FillInfor" element={<EmployeeFillInfor />} />
-              <Route path="/employee/NotificationList" element={<NotificationList />} />
+              <Route
+                path="/employee/ChooseSeatOneWay"
+                element={<EmployeeChooseSeatOneWay />}
+              />
+              <Route
+                path="/employee/ChooseSeatRoundTrip"
+                element={<EmployeeChooseSeatRoundTrip />}
+              />
+              <Route
+                path="/employee/ChangeTicket/ChooseSeatOneWay"
+                element={<EmployeeChooseSeatOneWay />}
+              />
+              <Route
+                path="/employee/ChangeTicket/ChooseSeatRoundTrip"
+                element={<EmployeeChooseSeatRoundTrip />}
+              />
+              <Route
+                path="/employee/SearchTicket"
+                element={<EmployeeSearchTicket />}
+              />
+              <Route
+                path="/employee/ChangeTicket"
+                element={<EmployeeChangeTicket />}
+              />
+              <Route
+                path="/employee/FillInfor"
+                element={<EmployeeFillInfor />}
+              />
+              <Route
+                path="/employee/NotificationList"
+                element={<NotificationList />}
+              />
 
               {/* ADMIN */}
               <Route path="/admin" element={<ManagerAccount />} />
-              <Route path="/admin/busManagement" element={<AdminBusManagement />} />
-              <Route path="/admin/reportScreen" element={<AdminReportScreen />} />
-              <Route path="/admin/discountManagement" element={<AdminDiscountManagement />} />
-              <Route path="/admin/managerAccount" element={<AdminManagerAccount />} />
-              <Route path="/admin/routeManager" element={<AdminRouteManager />} />
+              <Route
+                path="/admin/busManagement"
+                element={<AdminBusManagement />}
+              />
+              <Route
+                path="/admin/reportScreen"
+                element={<AdminReportScreen />}
+              />
+              <Route
+                path="/admin/discountManagement"
+                element={<AdminDiscountManagement />}
+              />
+              <Route
+                path="/admin/managerAccount"
+                element={<AdminManagerAccount />}
+              />
+              <Route
+                path="/admin/routeManager"
+                element={<AdminRouteManager />}
+              />
             </Routes>
             <Footer />
           </BrowserRouter>

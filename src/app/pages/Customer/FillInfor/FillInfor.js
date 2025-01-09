@@ -25,8 +25,9 @@ const FillInfor = () => {
   const location = useLocation();
   const selectedTrip = location.state?.selectedTrip;
   const selectedSeats = location.state?.selectedSeats;
-
   const [tickets, setTickets] = useState([]);
+  const [customerInfo, setCustomerInfo] = useState({});
+  const accountId = localStorage.getItem("accountId");
   const nav = useNavigate();
 
   const costTicketOutbound = location.state?.costTicketOutbound;
@@ -49,6 +50,22 @@ const FillInfor = () => {
     Type: selectedTrip?.bus?.type || selectedTrip?.[0]?.bus?.type,
     Price: costPerSet,
   });
+
+  useEffect(() => {
+    const fetchCustomerInfo = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5278/api/Account/${accountId}`
+        );
+        setCustomerInfo(response.data);
+      } catch (error) {
+        console.error("Error fetching customer info:", error);
+      }
+    };
+
+    fetchCustomerInfo();
+  }, [accountId]);
+
   const handleSelectedPromotion = async () => {
     if (!selectedPromotion) {
       alert("Vui lòng nhập mã khuyến mãi");
@@ -184,7 +201,7 @@ const FillInfor = () => {
                   readOnly
                   type="text"
                   className={clsx(styles.inputBasic, "p3")}
-                  value={routeData.Name}
+                  value={customerInfo.name}
                 ></input>
               </label>
               <label className={clsx(styles.itemInput, "uiSemibold")}>
@@ -192,16 +209,16 @@ const FillInfor = () => {
                 <input
                   type="number"
                   className={clsx(styles.inputBasic, "p3")}
-                  value={routeData.Phone}
+                  value={customerInfo.phoneNumber}
                   readOnly
                 ></input>
               </label>
               <label className={clsx(styles.itemInput, "uiSemibold")}>
-                Email
+                CCCD
                 <input
-                  type="email"
+                  type="text"
                   className={clsx(styles.inputBasic, "p3")}
-                  value={routeData.Mail}
+                  value={accountId}
                   readOnly
                 ></input>
               </label>

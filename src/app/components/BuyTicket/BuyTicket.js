@@ -38,16 +38,16 @@ function capitalizeWords(str) {
   return str
     .toLowerCase()
     .split(" ")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1)) // Viết hoa ký tự đầu, giữ nguyên phần còn lại
     .join(" ");
 }
 
 function normalizeString(str) {
   return str
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/\s+/g, "");
+    .normalize("NFD") // Tách chữ và dấu
+    .replace(/[\u0300-\u036f]/g, "") // Loại bỏ dấu
+    .toLowerCase() // Chuyển về chữ thường
+    .replace(/\s+/g, ""); // Loại bỏ khoảng trắng
 }
 
 const BuyTicket = () => {
@@ -58,8 +58,8 @@ const BuyTicket = () => {
   const nav = useNavigate();
 
   const ChangeTicket = location.state?.ticketChange;
-  const [searchLocationFrom, setSearchLocationFrom] = useState("");
-  const [searchLocationTo, setSearchLocationTo] = useState("");
+  const [searchLoactionFrom, setSearchLoactionFrom] = useState("");
+  const [searchLoactionTo, setSearchLoactionTo] = useState("");
   const [searchDateTimeFrom, setSearchDateTimeFrom] = useState("");
   const [searchDateTimeTo, setSearchDateTimeTo] = useState("");
   const [searchFreeSeat, setSearchFreeSeat] = useState("");
@@ -72,15 +72,22 @@ const BuyTicket = () => {
 
   const [noResultsOutboundFound, setNoResultsOutboundFound] = useState(false);
   const [noResultsReturnFound, setNoResultsReturnFound] = useState(false);
+  const [timeFrames, setTimeFrames] = useState({
+    "00:00 - 06:00": false,
+    "06:00 - 12:00": false,
+    "12:00 - 18:00": false,
+    "18:00 - 00:00": false,
+  });
+  const [filteredTicketsData, setFilteredTicketsData] = useState([]);
 
   const handleSearchOutbound = () => {
     const outboundResults = rows.filter((row) => {
       return (
         normalizeString(row.locationFrom).includes(
-          normalizeString(searchLocationFrom)
+          normalizeString(searchLoactionFrom)
         ) &&
         normalizeString(row.locationTo).includes(
-          normalizeString(searchLocationTo)
+          normalizeString(searchLoactionTo)
         ) &&
         new Date(row.dateTime).toISOString().slice(0, 10) ===
           new Date(searchDateTimeFrom).toISOString().slice(0, 10) &&
@@ -92,7 +99,7 @@ const BuyTicket = () => {
       setNoResultsOutboundFound(true);
     } else {
       setLocationFromTo(
-        capitalizeWords(`${searchLocationFrom} - ${searchLocationTo}`)
+        capitalizeWords(`${searchLoactionFrom} - ${searchLoactionTo}`)
       );
       setNoResultsOutboundFound(false);
       setFilteredRowsOutbound(outboundResults);
@@ -104,10 +111,10 @@ const BuyTicket = () => {
     const returnResults = rows.filter((row) => {
       return (
         normalizeString(row.locationFrom).includes(
-          normalizeString(searchLocationTo)
+          normalizeString(searchLoactionTo)
         ) &&
         normalizeString(row.locationTo).includes(
-          normalizeString(searchLocationFrom)
+          normalizeString(searchLoactionFrom)
         ) &&
         new Date(row.dateTime).toISOString().slice(0, 10) ===
           new Date(searchDateTimeTo).toISOString().slice(0, 10) &&
@@ -121,20 +128,63 @@ const BuyTicket = () => {
       setNoResultsReturnFound(false);
       setFilteredRowsReturn(returnResults);
       setLocationFromTo(
-        capitalizeWords(`${searchLocationTo} - ${searchLocationFrom}`)
+        capitalizeWords(`${searchLoactionTo} - ${searchLoactionFrom}`)
       );
     }
     setIsResultOpen(true);
   };
 
+  const handleTimeFrameChange = (timeFrame) => {
+    setTimeFrames((prev) => ({
+      ...prev,
+      [timeFrame]: !prev[timeFrame],
+    }));
+  };
+
   const handleTripSelected = (trip) => {
     setSelectedTrip(trip);
   };
+
+  const handleFilter = () => {
+    const filteredData = rows.filter((ticket) => {
+      const departureDate = new Date(ticket.dateTime);
+      const startDateTime = new Date(searchDateTimeFrom);
+      const endDateTime = new Date(searchDateTimeTo);
+
+      const isWithinDateRange =
+        departureDate >= startDateTime && departureDate <= endDateTime;
+
+      const departureTime = departureDate.getHours();
+      const isWithinTimeFrame = Object.keys(timeFrames).some((timeFrame) => {
+        if (timeFrames[timeFrame]) {
+          const [startDateTime, endDateTime] = timeFrame
+            .split(" - ")
+            .map((time) => parseInt(time.replace(":", ""), 10));
+          if (startDateTime < endDateTime) {
+            return (
+              departureTime >= startDateTime / 100 &&
+              departureTime < endDateTime / 100
+            );
+          } else {
+            return (
+              departureTime >= startDateTime / 100 ||
+              departureTime < endDateTime / 100
+            );
+          }
+        }
+        return false;
+      });
+
+      return isWithinDateRange && isWithinTimeFrame;
+    });
+    setFilteredTicketsData(filteredData);
+  };
+
   const handleSearchButtonClick = async () => {
     if (isRoundTrip) {
       if (
-        !searchLocationFrom ||
-        !searchLocationTo ||
+        !searchLoactionFrom ||
+        !searchLoactionTo ||
         !searchDateTimeFrom ||
         !searchDateTimeTo ||
         !searchFreeSeat
@@ -143,17 +193,20 @@ const BuyTicket = () => {
         return;
       }
       try {
+        // Tìm kiếm outbound (chuyến đi)
         const outboundResponse = await axios.get(
           "http://localhost:5278/api/bookticket/search",
           {
             params: {
-              departPlace: searchLocationFrom,
-              arrivalPlace: searchLocationTo,
+              departPlace: searchLoactionFrom,
+              arrivalPlace: searchLoactionTo,
               departureDate: searchDateTimeFrom,
               ticketCount: searchFreeSeat,
             },
           }
         );
+        console.log(outboundResponse.data);
+        setRows(outboundResponse.data);
 
         if (outboundResponse.data.length === 0) {
           setNoResultsOutboundFound(true);
@@ -161,20 +214,21 @@ const BuyTicket = () => {
           setNoResultsOutboundFound(false);
           setFilteredRowsOutbound(outboundResponse.data);
         }
-        alert("Return response: " + outboundResponse.data);
 
+        // Tìm kiếm return (chuyến về)
         const returnResponse = await axios.get(
           "http://localhost:5278/api/bookticket/search",
           {
             params: {
-              departPlace: searchLocationTo,
-              arrivalPlace: searchLocationFrom,
+              departPlace: searchLoactionTo,
+              arrivalPlace: searchLoactionFrom,
               departureDate: searchDateTimeTo,
               ticketCount: searchFreeSeat,
             },
           }
         );
-
+        console.log(returnResponse.data);
+        setRows(returnResponse.data);
         if (returnResponse.data.length === 0) {
           setNoResultsReturnFound(true);
         } else {
@@ -187,9 +241,10 @@ const BuyTicket = () => {
         alert("Đã có lỗi xảy ra khi gọi API");
       }
     } else {
+      // Tìm kiếm cho chuyến đi một chiều
       if (
-        !searchLocationFrom ||
-        !searchLocationTo ||
+        !searchLoactionFrom ||
+        !searchLoactionTo ||
         !searchDateTimeFrom ||
         !searchFreeSeat
       ) {
@@ -201,131 +256,29 @@ const BuyTicket = () => {
           "http://localhost:5278/api/bookticket/search",
           {
             params: {
-              departPlace: searchLocationFrom,
-              arrivalPlace: searchLocationTo,
-              //   departureDate: searchDateTimeFrom,
+              departPlace: searchLoactionFrom,
+              arrivalPlace: searchLoactionTo,
+              // departureDate: searchDateTimeFrom,
               ticketCount: searchFreeSeat,
             },
           }
         );
         console.log(response.data);
+        setRows(response.data);
+
         if (response.data.length === 0) {
           setNoResultsOutboundFound(true);
         } else {
           setNoResultsOutboundFound(false);
           setFilteredRowsOutbound(response.data);
         }
+
+        setIsResultOpen(true);
       } catch (error) {
         alert("Đã có lỗi xảy ra khi gọi API");
       }
     }
-
-    const handleTripSelected = (trip) => {
-      setSelectedTrip(trip);
-    };
-
-    const handleSearchButtonClick = async () => {
-      if (isRoundTrip) {
-        if (
-          !searchLocationFrom ||
-          !searchLocationTo ||
-          !searchDateTimeFrom ||
-          !searchDateTimeTo ||
-          !searchFreeSeat
-        ) {
-          alert("Vui lòng nhập đủ thông tin tìm kiếm");
-          return;
-        }
-        try {
-          // Tìm kiếm outbound (chuyến đi)
-          const outboundResponse = await axios.get(
-            "http://localhost:5278/api/bookticket/search",
-            {
-              params: {
-                departPlace: searchLocationFrom,
-                arrivalPlace: searchLocationTo,
-                departureDate: searchDateTimeFrom,
-                ticketCount: searchFreeSeat,
-              },
-            }
-          );
-          console.log(outboundResponse.data);
-          setRows(outboundResponse.data);
-
-          if (outboundResponse.data.length === 0) {
-            setNoResultsOutboundFound(true);
-          } else {
-            setNoResultsOutboundFound(false);
-            setFilteredRowsOutbound(outboundResponse.data);
-          }
-
-          // Tìm kiếm return (chuyến về)
-          const returnResponse = await axios.get(
-            "http://localhost:5278/api/bookticket/search",
-            {
-              params: {
-                departPlace: searchLocationTo,
-                arrivalPlace: searchLocationFrom,
-                departureDate: searchDateTimeTo,
-                ticketCount: searchFreeSeat,
-              },
-            }
-          );
-          console.log(returnResponse.data);
-          setRows(returnResponse.data);
-          if (returnResponse.data.length === 0) {
-            setNoResultsReturnFound(true);
-          } else {
-            setNoResultsReturnFound(false);
-            setFilteredRowsReturn(returnResponse.data);
-          }
-
-          setIsResultOpen(true);
-        } catch (error) {
-          alert("Đã có lỗi xảy ra khi gọi API");
-        }
-      } else {
-        // Tìm kiếm cho chuyến đi một chiều
-        if (
-          !searchLocationFrom ||
-          !searchLocationTo ||
-          !searchDateTimeFrom ||
-          !searchFreeSeat
-        ) {
-          alert("Vui lòng nhập đủ thông tin tìm kiếm");
-          return;
-        }
-        try {
-          const response = await axios.get(
-            "http://localhost:5278/api/bookticket/search",
-            {
-              params: {
-                departPlace: searchLocationFrom,
-                arrivalPlace: searchLocationTo,
-                departureDate: searchDateTimeFrom,
-                ticketCount: searchFreeSeat,
-              },
-            }
-          );
-          console.log(response.data);
-          setRows(response.data);
-
-          if (response.data.length === 0) {
-            setNoResultsOutboundFound(true);
-          } else {
-            setNoResultsOutboundFound(false);
-            setFilteredRowsOutbound(response.data);
-          }
-
-          setIsResultOpen(true);
-        } catch (error) {
-          alert("Đã có lỗi xảy ra khi gọi API");
-        }
-      }
-      setIsResultOpen(true);
-    };
   };
-
   return (
     <div>
       <div>
@@ -368,8 +321,8 @@ const BuyTicket = () => {
               <input
                 type="text"
                 className={styles.inputBasic}
-                value={searchLocationFrom}
-                onChange={(e) => setSearchLocationFrom(e.target.value)}
+                value={searchLoactionFrom}
+                onChange={(e) => setSearchLoactionFrom(e.target.value)}
               ></input>
             </div>
             <div className={styles.itemInforBasic}>
@@ -377,8 +330,8 @@ const BuyTicket = () => {
               <input
                 type="text"
                 className={styles.inputBasic}
-                value={searchLocationTo}
-                onChange={(e) => setSearchLocationTo(e.target.value)}
+                value={searchLoactionTo}
+                onChange={(e) => setSearchLoactionTo(e.target.value)}
               ></input>
             </div>
             <div className={styles.itemInforBasic}>
@@ -434,31 +387,42 @@ const BuyTicket = () => {
                     <input
                       type="checkbox"
                       className={styles.checkboxInput}
-                    ></input>
+                      checked={timeFrames["00:00 - 06:00"]}
+                      onChange={() => handleTimeFrameChange("00:00 - 06:00")}
+                    />
                     <label className="p3">00:00 - 06:00</label>
                   </div>
                   <div className={styles.itemCheckBox}>
                     <input
                       type="checkbox"
                       className={styles.checkboxInput}
-                    ></input>
+                      checked={timeFrames["06:00 - 12:00"]}
+                      onChange={() => handleTimeFrameChange("06:00 - 12:00")}
+                    />
                     <label className="p3">06:00 - 12:00</label>
                   </div>
                   <div className={styles.itemCheckBox}>
                     <input
                       type="checkbox"
                       className={styles.checkboxInput}
-                    ></input>
+                      checked={timeFrames["12:00 - 18:00"]}
+                      onChange={() => handleTimeFrameChange("12:00 - 18:00")}
+                    />
                     <label className="p3">12:00 - 18:00</label>
                   </div>
                   <div className={styles.itemCheckBox}>
                     <input
                       type="checkbox"
                       className={styles.checkboxInput}
-                    ></input>
+                      checked={timeFrames["18:00 - 00:00"]}
+                      onChange={() => handleTimeFrameChange("18:00 - 00:00")}
+                    />
                     <label className="p3">18:00 - 00:00</label>
                   </div>
                 </div>
+                <button onClick={handleFilter} className={styles.filterButton}>
+                  Lọc
+                </button>
               </div>
             </div>
           </div>
@@ -532,4 +496,5 @@ const BuyTicket = () => {
     </div>
   );
 };
+
 export default BuyTicket;

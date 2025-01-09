@@ -3,7 +3,7 @@ import styles from "./Login.module.css";
 import { InlineIcon } from "@iconify/react/dist/iconify.js";
 import ButtonBack from "../../../components/ButtonBack/ButtonBack";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";  
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,16 +20,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5278/api/auth/signin", formData);
+      const response = await axios.post(
+        "http://localhost:5278/api/auth/signin",
+        formData
+      );
+      console.log(response);
 
       if (response.status === 200) {
         const { accountType } = response.data;
         console.log(response.data.accountId);
-         if ( response.data.accountId) {
-        localStorage.setItem("accountId", response.data.accountId );
-        localStorage.setItem("accountType", accountType );
-
-      }  
+        if (response.data.accountId) {
+          localStorage.setItem("accountId", response.data.accountId);
+          localStorage.setItem("accountType", accountType);
+        }
 
         if (accountType === "Customer") {
           navigate("/customer");
@@ -40,8 +43,6 @@ const Login = () => {
         } else {
           alert("Unknown account type");
         }
-
-        
       } else {
         alert(response.data.message || "Đăng nhập thất bại");
       }
@@ -51,7 +52,6 @@ const Login = () => {
     }
   };
 
-
   return (
     <div className={styles.loginContainer}>
       <ButtonBack></ButtonBack>
@@ -59,22 +59,24 @@ const Login = () => {
         <div className={styles.loginFlexBox}>
           <h2 style={{ textAlign: "center" }}>ĐĂNG NHẬP</h2>
           <div className={styles.fillSpace}>
-            <p className="uiSemibold">Email</p>
+            <p className="uiSemibold">CCCD</p>
             <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
               className={styles.fillInput}
-              placeholder="abc@gmail.com"
             ></input>
           </div>
           <div className={styles.fillSpace}>
             <p className="uiSemibold">Mật khẩu</p>
-            <input type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleInputChange} className={styles.fillInput}></input>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              className={styles.fillInput}
+            ></input>
           </div>
         </div>
         <button className={styles.forgotPassword}>
