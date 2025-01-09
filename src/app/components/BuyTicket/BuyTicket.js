@@ -58,8 +58,8 @@ const BuyTicket = () => {
   const nav = useNavigate();
 
   const ChangeTicket = location.state?.ticketChange;
-  const [searchLoactionFrom, setSearchLoactionFrom] = useState("");
-  const [searchLoactionTo, setSearchLoactionTo] = useState("");
+  const [searchLocationFrom, setSearchLocationFrom] = useState("");
+  const [searchLocationTo, setSearchLocationTo] = useState("");
   const [searchDateTimeFrom, setSearchDateTimeFrom] = useState("");
   const [searchDateTimeTo, setSearchDateTimeTo] = useState("");
   const [searchFreeSeat, setSearchFreeSeat] = useState("");
@@ -227,8 +227,8 @@ const BuyTicket = () => {
     const handleSearchButtonClick = async () => {
       if (isRoundTrip) {
         if (
-          !searchLoactionFrom ||
-          !searchLoactionTo ||
+          !searchLocationFrom ||
+          !searchLocationTo ||
           !searchDateTimeFrom ||
           !searchDateTimeTo ||
           !searchFreeSeat
@@ -242,8 +242,8 @@ const BuyTicket = () => {
             "http://localhost:5278/api/bookticket/search",
             {
               params: {
-                departPlace: searchLoactionFrom,
-                arrivalPlace: searchLoactionTo,
+                departPlace: searchLocationFrom,
+                arrivalPlace: searchLocationTo,
                 departureDate: searchDateTimeFrom,
                 ticketCount: searchFreeSeat,
               },
@@ -264,8 +264,8 @@ const BuyTicket = () => {
             "http://localhost:5278/api/bookticket/search",
             {
               params: {
-                departPlace: searchLoactionTo,
-                arrivalPlace: searchLoactionFrom,
+                departPlace: searchLocationTo,
+                arrivalPlace: searchLocationFrom,
                 departureDate: searchDateTimeTo,
                 ticketCount: searchFreeSeat,
               },
@@ -287,8 +287,8 @@ const BuyTicket = () => {
       } else {
         // Tìm kiếm cho chuyến đi một chiều
         if (
-          !searchLoactionFrom ||
-          !searchLoactionTo ||
+          !searchLocationFrom ||
+          !searchLocationTo ||
           !searchDateTimeFrom ||
           !searchFreeSeat
         ) {
@@ -300,8 +300,8 @@ const BuyTicket = () => {
             "http://localhost:5278/api/bookticket/search",
             {
               params: {
-                departPlace: searchLoactionFrom,
-                arrivalPlace: searchLoactionTo,
+                departPlace: searchLocationFrom,
+                arrivalPlace: searchLocationTo,
                 departureDate: searchDateTimeFrom,
                 ticketCount: searchFreeSeat,
               },
@@ -325,211 +325,211 @@ const BuyTicket = () => {
       setIsResultOpen(true);
     };
   };
-};
-return (
-  <div>
+
+  return (
     <div>
-      <div className={styles.fillInputSpace}>
-        {/* SWITCH */}
-        <div className={styles.switchRoundTrip}>
-          <p className="uiSemibold">Khứ hồi</p>
-          <div onClick={toggleRoundTrip} style={{ textAlign: "center" }}>
-            <div
-              style={{
-                display: "inline-block",
-                width: "60px",
-                height: "30px",
-                borderRadius: "30px",
-                backgroundColor: isRoundTrip ? "#D7987D" : "grey",
-                position: "relative",
-                cursor: "pointer",
-                transition: "background-color 0.3s",
-              }}
-            >
+      <div>
+        <div className={styles.fillInputSpace}>
+          {/* SWITCH */}
+          <div className={styles.switchRoundTrip}>
+            <p className="uiSemibold">Khứ hồi</p>
+            <div onClick={toggleRoundTrip} style={{ textAlign: "center" }}>
               <div
                 style={{
-                  width: "26px",
-                  height: "26px",
-                  borderRadius: "50%",
-                  backgroundColor: "white",
-                  position: "absolute",
-                  top: "2px",
-                  left: isRoundTrip ? "32px" : "2px",
-                  transition: "left 0.3s",
+                  display: "inline-block",
+                  width: "60px",
+                  height: "30px",
+                  borderRadius: "30px",
+                  backgroundColor: isRoundTrip ? "#D7987D" : "grey",
+                  position: "relative",
+                  cursor: "pointer",
+                  transition: "background-color 0.3s",
                 }}
-              ></div>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.fillSearchRoundInfor}>
-          <div className={styles.itemInforBasic}>
-            <p className="uiSemibold">Điểm đi</p>
-            <input
-              type="text"
-              className={styles.inputBasic}
-              value={searchLocationFrom}
-              onChange={(e) => setSearchLocationFrom(e.target.value)}
-            ></input>
-          </div>
-          <div className={styles.itemInforBasic}>
-            <p className="uiSemibold">Điểm đến</p>
-            <input
-              type="text"
-              className={styles.inputBasic}
-              value={searchLocationTo}
-              onChange={(e) => setSearchLocationTo(e.target.value)}
-            ></input>
-          </div>
-          <div className={styles.itemInforBasic}>
-            <p className="uiSemibold">Ngày đi</p>
-            <input
-              type="date"
-              className={styles.inputBasic}
-              value={searchDateTimeFrom}
-              onChange={(e) => setSearchDateTimeFrom(e.target.value)}
-            ></input>
-          </div>
-          <div
-            className={styles.itemInforBasic}
-            style={{
-              display: isRoundTrip ? "block" : "none",
-            }}
-          >
-            <p className="uiSemibold">Ngày về</p>
-            <input
-              type="date"
-              className={styles.inputBasic}
-              value={searchDateTimeTo}
-              onChange={(e) => setSearchDateTimeTo(e.target.value)}
-            ></input>
-          </div>
-          <div className={styles.itemInforBasic}>
-            <p className="uiSemibold">Số vé</p>
-            <input
-              type="number"
-              className={styles.inputBasic}
-              value={searchFreeSeat}
-              onChange={(e) => setSearchFreeSeat(e.target.value)}
-            ></input>
-          </div>
-        </div>
-
-        <button onClick={handleSearchButtonClick}>
-          <h4>Tìm chuyến xe</h4>
-        </button>
-      </div>
-    </div>
-
-    {/* SEARCHING RESULT */}
-    {isResultOpen && (
-      <div className={styles.resutlContainer}>
-        <div className={styles.filterSpace}>
-          <div className={styles.flexBoxContainer}>
-            <h4>Lọc</h4>
-            <div className={styles.filterItem}>
-              <p className="uiSemibold">Khung thời gian</p>
-              <div className={styles.filterCheckBoxList}>
-                <div className={styles.itemCheckBox}>
-                  <input
-                    type="checkbox"
-                    className={styles.checkboxInput}
-                  ></input>
-                  <label className="p3">00:00 - 06:00</label>
-                </div>
-                <div className={styles.itemCheckBox}>
-                  <input
-                    type="checkbox"
-                    className={styles.checkboxInput}
-                  ></input>
-                  <label className="p3">06:00 - 12:00</label>
-                </div>
-                <div className={styles.itemCheckBox}>
-                  <input
-                    type="checkbox"
-                    className={styles.checkboxInput}
-                  ></input>
-                  <label className="p3">12:00 - 18:00</label>
-                </div>
-                <div className={styles.itemCheckBox}>
-                  <input
-                    type="checkbox"
-                    className={styles.checkboxInput}
-                  ></input>
-                  <label className="p3">18:00 - 00:00</label>
-                </div>
+              >
+                <div
+                  style={{
+                    width: "26px",
+                    height: "26px",
+                    borderRadius: "50%",
+                    backgroundColor: "white",
+                    position: "absolute",
+                    top: "2px",
+                    left: isRoundTrip ? "32px" : "2px",
+                    transition: "left 0.3s",
+                  }}
+                ></div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className={styles.resultSpace}>
-          {isRoundTrip ? (
+          <div className={styles.fillSearchRoundInfor}>
+            <div className={styles.itemInforBasic}>
+              <p className="uiSemibold">Điểm đi</p>
+              <input
+                type="text"
+                className={styles.inputBasic}
+                value={searchLocationFrom}
+                onChange={(e) => setSearchLocationFrom(e.target.value)}
+              ></input>
+            </div>
+            <div className={styles.itemInforBasic}>
+              <p className="uiSemibold">Điểm đến</p>
+              <input
+                type="text"
+                className={styles.inputBasic}
+                value={searchLocationTo}
+                onChange={(e) => setSearchLocationTo(e.target.value)}
+              ></input>
+            </div>
+            <div className={styles.itemInforBasic}>
+              <p className="uiSemibold">Ngày đi</p>
+              <input
+                type="date"
+                className={styles.inputBasic}
+                value={searchDateTimeFrom}
+                onChange={(e) => setSearchDateTimeFrom(e.target.value)}
+              ></input>
+            </div>
             <div
+              className={styles.itemInforBasic}
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: 946,
+                display: isRoundTrip ? "block" : "none",
               }}
             >
-              <h4>{locationFromTo}</h4>
-              <div className={styles.radioButtons}>
-                <label className="uiSemibold">
-                  <input
-                    type="radio"
-                    name="tripType"
-                    value="Chuyến đi"
-                    checked={selectedTrip === "Chuyến đi"}
-                    onChange={() => handleTripSelected("Chuyến đi")}
-                  />
-                  Chuyến đi
-                </label>
-                <label className="uiSemibold">
-                  <input
-                    type="radio"
-                    name="tripType"
-                    value="Chuyến về"
-                    checked={selectedTrip === "Chuyến về"}
-                    onChange={() => handleTripSelected("Chuyến về")}
-                  />
-                  Chuyến về
-                </label>
-              </div>
+              <p className="uiSemibold">Ngày về</p>
+              <input
+                type="date"
+                className={styles.inputBasic}
+                value={searchDateTimeTo}
+                onChange={(e) => setSearchDateTimeTo(e.target.value)}
+              ></input>
             </div>
-          ) : (
-            <h4>{locationFromTo}</h4>
-          )}
-
-          <div className={styles.flexBoxContainer}>
-            {isRoundTrip ? (
-              <>
-                {selectedTrip === "Chuyến đi" ? (
-                  noResultsOutboundFound ? (
-                    <p className="p2">Không tìm thấy kết quả cho chuyến đi</p>
-                  ) : (
-                    <ChooseRound rows={filteredRowsOutbound} isRoundTrip />
-                  )
-                ) : selectedTrip === "Chuyến về" ? (
-                  noResultsReturnFound ? (
-                    <p className="p2">Không tìm thấy kết quả cho chuyến về</p>
-                  ) : (
-                    <ChooseRound rows={filteredRowsReturn} isRoundTrip />
-                  )
-                ) : null}
-              </>
-            ) : noResultsOutboundFound ? (
-              <p className="p2">Không tìm thấy kết quả cho chuyến đi</p>
-            ) : (
-              <ChooseRound
-                rows={filteredRowsOutbound}
-                isRoundTrip={isRoundTrip}
-              />
-            )}
+            <div className={styles.itemInforBasic}>
+              <p className="uiSemibold">Số vé</p>
+              <input
+                type="number"
+                className={styles.inputBasic}
+                value={searchFreeSeat}
+                onChange={(e) => setSearchFreeSeat(e.target.value)}
+              ></input>
+            </div>
           </div>
+
+          <button onClick={handleSearchButtonClick}>
+            <h4>Tìm chuyến xe</h4>
+          </button>
         </div>
       </div>
-    )}
-  </div>
-);
 
+      {/* SEARCHING RESULT */}
+      {isResultOpen && (
+        <div className={styles.resutlContainer}>
+          <div className={styles.filterSpace}>
+            <div className={styles.flexBoxContainer}>
+              <h4>Lọc</h4>
+              <div className={styles.filterItem}>
+                <p className="uiSemibold">Khung thời gian</p>
+                <div className={styles.filterCheckBoxList}>
+                  <div className={styles.itemCheckBox}>
+                    <input
+                      type="checkbox"
+                      className={styles.checkboxInput}
+                    ></input>
+                    <label className="p3">00:00 - 06:00</label>
+                  </div>
+                  <div className={styles.itemCheckBox}>
+                    <input
+                      type="checkbox"
+                      className={styles.checkboxInput}
+                    ></input>
+                    <label className="p3">06:00 - 12:00</label>
+                  </div>
+                  <div className={styles.itemCheckBox}>
+                    <input
+                      type="checkbox"
+                      className={styles.checkboxInput}
+                    ></input>
+                    <label className="p3">12:00 - 18:00</label>
+                  </div>
+                  <div className={styles.itemCheckBox}>
+                    <input
+                      type="checkbox"
+                      className={styles.checkboxInput}
+                    ></input>
+                    <label className="p3">18:00 - 00:00</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.resultSpace}>
+            {isRoundTrip ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: 946,
+                }}
+              >
+                <h4>{locationFromTo}</h4>
+                <div className={styles.radioButtons}>
+                  <label className="uiSemibold">
+                    <input
+                      type="radio"
+                      name="tripType"
+                      value="Chuyến đi"
+                      checked={selectedTrip === "Chuyến đi"}
+                      onChange={() => handleTripSelected("Chuyến đi")}
+                    />
+                    Chuyến đi
+                  </label>
+                  <label className="uiSemibold">
+                    <input
+                      type="radio"
+                      name="tripType"
+                      value="Chuyến về"
+                      checked={selectedTrip === "Chuyến về"}
+                      onChange={() => handleTripSelected("Chuyến về")}
+                    />
+                    Chuyến về
+                  </label>
+                </div>
+              </div>
+            ) : (
+              <h4>{locationFromTo}</h4>
+            )}
+
+            <div className={styles.flexBoxContainer}>
+              {isRoundTrip ? (
+                <>
+                  {selectedTrip === "Chuyến đi" ? (
+                    noResultsOutboundFound ? (
+                      <p className="p2">Không tìm thấy kết quả cho chuyến đi</p>
+                    ) : (
+                      <ChooseRound rows={filteredRowsOutbound} isRoundTrip />
+                    )
+                  ) : selectedTrip === "Chuyến về" ? (
+                    noResultsReturnFound ? (
+                      <p className="p2">Không tìm thấy kết quả cho chuyến về</p>
+                    ) : (
+                      <ChooseRound rows={filteredRowsReturn} isRoundTrip />
+                    )
+                  ) : null}
+                </>
+              ) : noResultsOutboundFound ? (
+                <p className="p2">Không tìm thấy kết quả cho chuyến đi</p>
+              ) : (
+                <ChooseRound
+                  rows={filteredRowsOutbound}
+                  isRoundTrip={isRoundTrip}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 export default BuyTicket;
