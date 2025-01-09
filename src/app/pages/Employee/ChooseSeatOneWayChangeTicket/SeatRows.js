@@ -59,16 +59,26 @@ import clsx from 'clsx';
 
 
 const SeatRows = ({ seats, onSeatChange }) => {
-    const [selectedSeats, setSelectedSeats] = useState([]);
+    const [selectedSeats, setSelectedSeats] = useState({
+        ids: [],
+        numbers: []
+    });
 
-    const toggleSeatSelection = (seatId) => {
+    const toggleSeatSelection = (seat) => {
         setSelectedSeats((prev) => {
-            const updatedSeats = prev.includes(seatId)
-                ? prev.filter((id) => id !== seatId)
-                : [...prev, seatId];
+            const { ids, numbers } = prev;
+            const isSelected = ids.includes(seat.seatID);
 
-            onSeatChange(updatedSeats);
-            return updatedSeats;
+            const updatedIds = isSelected
+                ? ids.filter((id) => id !== seat.seatID)
+                : [...ids, seat.seatID];
+
+            const updatedNumbers = isSelected
+                ? numbers.filter((number) => number !== seat.seatNumber)
+                : [...numbers, seat.seatNumber];
+
+            onSeatChange({ ids: updatedIds, numbers: updatedNumbers });
+            return { ids: updatedIds, numbers: updatedNumbers };
         });
     };
 
@@ -108,14 +118,14 @@ const SeatRows = ({ seats, onSeatChange }) => {
                                         className={clsx(
                                             `${styles.seat} 
                                             ${seat.isBooked ? styles.unavailable : ""} 
-                                            ${selectedSeats.includes(seat.seatNumber) ? styles.selected : ""}`,
+                                            ${selectedSeats.numbers.includes(seat.seatNumber) ? styles.selected : ""}`,
                                             "uiSemibold"
                                         )}
                                     >
                                         <input
                                             type="checkbox"
                                             name={seat.seatNumber}
-                                            onChange={() => toggleSeatSelection(seat.seatNumber)}
+                                            onChange={() => toggleSeatSelection(seat)}
                                             disabled={seat.isBooked}
                                         />
                                         <span>{seat.seatNumber}</span>
@@ -138,14 +148,14 @@ const SeatRows = ({ seats, onSeatChange }) => {
                                         className={clsx(
                                             `${styles.seat} 
                                             ${seat.isBooked ? styles.unavailable : ""} 
-                                            ${selectedSeats.includes(seat.seatNumber) ? styles.selected : ""}`,
+                                            ${selectedSeats.numbers.includes(seat.seatNumber) ? styles.selected : ""}`,
                                             "uiSemibold"
                                         )}
                                     >
                                         <input
                                             type="checkbox"
                                             name={seat.seatNumber}
-                                            onChange={() => toggleSeatSelection(seat.seatNumber)}
+                                            onChange={() => toggleSeatSelection(seat)}
                                             disabled={seat.isBooked}
                                         />
                                         <span>{seat.seatNumber}</span>

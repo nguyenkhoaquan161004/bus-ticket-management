@@ -38,7 +38,7 @@ import EmployeeChooseSeatRoundTrip from "../pages/Employee/ChooseSeatRoundTrip";
 import EmployeeSearchTicket from "../pages/Employee/SearchTicket";
 import EmployeeStartScreen from "../pages/Employee/Start";
 import EmployeeFillInfor from "../pages/Employee/FillInfor";
-
+import NotificationList from "../pages/Employee/NotificationList"
 function Header() {
   const location = useLocation();
 
@@ -112,6 +112,7 @@ export default function MainRoutes() {
               <Route path="/employee/SearchTicket" element={<EmployeeSearchTicket />} />
               <Route path="/employee/ChangeTicket" element={<EmployeeChangeTicket />} />
               <Route path="/employee/FillInfor" element={<EmployeeFillInfor />} />
+              <Route path="/employee/NotificationList" element={<NotificationList />} />
 
               {/* ADMIN */}
               <Route path="/admin" element={<ManagerAccount />} />

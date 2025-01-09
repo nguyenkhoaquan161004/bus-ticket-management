@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './ReportScreen.module.css';
 import { InlineIcon } from '@iconify/react/dist/iconify.js';
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-
+import axios from "axios";
 function createData(fromLocation, toLocation, date, timeStart, totalTickets, ticketsPurchased, unitPrice) {
     const revenue = ticketsPurchased * unitPrice;
     return { fromLocation, toLocation, date, timeStart, totalTickets, ticketsPurchased, unitPrice, revenue };
@@ -41,8 +41,13 @@ const totalRevenue = rows.reduce((sum, row) => sum + row.revenue, 0);
 const ReportScreen = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
-    const [filterRows, setFilterRows] = useState(rows);
-
+    const [results, setResults] = useState([]);
+    const [searchQuery, setSearchQuery] = useState({
+      id: "",
+      departure: "",
+      destination: "",
+      date: "",
+    });
     const handleStartDateChange = (e) => {
         setStartDate(e.target.value);
     };
@@ -52,22 +57,60 @@ const ReportScreen = () => {
     }
 
     const handleFilter = () => {
-        if (startDate && endDate) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
+        
+            fetchBusRoutes();
 
-            const filteredData = rows.filter(row => {
-                if (!row.date) return false; // Bỏ qua nếu `date` không tồn tại
-                const departureDate = new Date(row.date.split('/').reverse().join('-')); // Định dạng ngày
-                return departureDate >= start && departureDate <= end;
-            });
-
-            setFilterRows(filteredData);
-        } else {
-            alert("Vui lòng nhập đầy đủ 'Từ ngày' và 'Đến ngày'.")
-        }
+       
     }
-
+    const fetchBusRoutes = async () => {
+        try {
+          const params = {
+            id: searchQuery.id,
+            departure: searchQuery.departure,
+            destination: searchQuery.destination,
+            date: searchQuery.date,
+          };
+      
+          const response = await axios.get(
+            "http://localhost:5278/api/busroute/bus-route-report",
+            { params } 
+          );
+      
+          setResults(response.data);
+          console.log(response.data);
+        } catch (error) {
+          console.error("Error fetching bus routes:", error);
+        }
+      };
+      
+      useEffect(() => {
+        fetchBusRoutes(); 
+      }, []);
+      const calculateTotalRevenue = () => {
+        return results.reduce((sum, route) => sum + route.totalRevenue, 0);
+      };
+      const handleExport = async () => {
+        try {
+          const response = await axios.get(
+            "http://localhost:5278/api/busroute/bus-route-report-export",
+            {
+              params: searchQuery, 
+              responseType: "blob", 
+            }
+          );
+      
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "BusRouteReport.xlsx");
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } catch (error) {
+          console.error("Error exporting file:", error);
+        }
+      };
+      
     return (
         <div>
             <div className={styles.mainContainer}>
@@ -78,57 +121,74 @@ const ReportScreen = () => {
                 {/* INPUT SELECTION */}
                 <div className={styles.GenaralContainer}>
                     <div className={styles.inputSelectionContainer}>
-                        <div className={styles.inputLocationContainer}>
-                            <p className='uiSemibold'>Từ ngày</p>
+                    <div className={styles.inputLocationContainer}>
                             <input
-                                type="date"
+                               placeholder="Tìm theo mã tuyến"
                                 className={styles.inputTime}
-                                value={startDate}
-                                onChange={handleStartDateChange}></input>
+                              
+                                onChange={(e) =>
+                                    setSearchQuery((prev) => ({ ...prev, id: e.target.value }))
+                                  }></input>
                         </div>
                         <div className={styles.inputLocationContainer}>
-                            <p className='uiSemibold'>Đến ngày</p>
+                            <input
+                                 placeholder="Điểm đi"
+                                  className={styles.inputTime}
+                                onChange={(e) =>
+                                    setSearchQuery((prev) => ({ ...prev, departure: e.target.value }))
+                                  }></input>
+                        </div>
+                        <div className={styles.inputLocationContainer}>
+                            <input
+                                 placeholder="Điểm đến"
+                                 className={styles.inputTime}
+                                onChange={(e) =>
+                                    setSearchQuery((prev) => ({ ...prev, destination: e.target.value }))
+                                  }></input>
+                        </div>
+                        <div className={styles.inputLocationContainer}>
                             <input
                                 type="date"
+                                placeholder="Ngày"
                                 className={styles.inputTime}
-                                value={endDate}
-                                onChange={handleEndDateChange}></input>
+                                onChange={(e) =>
+                                    setSearchQuery((prev) => ({ ...prev, date: e.target.value }))
+                                  }></input>
                         </div>
                         <button onClick={handleFilter}><p className='uiSemibold'>Tạo báo cáo</p></button>
-                        <button className={styles.exportFileButton}><h5>Xuất file Excel</h5></button>
+                        <button className={styles.exportFileButton} onClick={handleExport}><h5>Xuất file Excel</h5></button>
                     </div>
                 </div>
-                {/* REPORT TABLE */}
+              {/* REPORT TABLE */}
                 <div className={styles.reportTableContainer}>
-                    <TableContainer component={Paper} sx={{ width: '80%', maxHeight: 800 }}>
-                        <Table stickyHeader sx={{ minWidth: 650, width: 1380, justifyContent: 'center' }} aria-label='simple table'>
+                    <TableContainer component={Paper} sx={{ width: '90%', maxHeight: 800 }}>
+                        <Table stickyHeader sx={{ minWidth: 850 }} aria-label="simple table">
                             <TableHead>
                                 <TableRow>
-                                    <TableCell sx={{}} align="left"><h6>Điểm đi</h6></TableCell>
-                                    <TableCell sx={{}} align="left"><h6>Điểm đến</h6></TableCell>
-                                    <TableCell sx={{}} align="right"><h6>Ngày khởi hành</h6></TableCell>
-                                    <TableCell sx={{}} align="right"><h6>Giờ xuất phát</h6></TableCell>
-                                    <TableCell sx={{}} align="right"><h6>Tổng số vé</h6></TableCell>
-                                    <TableCell sx={{}} align="right"><h6>Số vé bán được</h6></TableCell>
-                                    <TableCell sx={{}} align="right"><h6>Đơn giá</h6></TableCell>
-                                    <TableCell sx={{}} align="right"><h6>Doanh thu</h6></TableCell>
+                                    <TableCell sx={{ fontSize: '22px' }} align="left"><h6>Mã tuyến</h6></TableCell>
+                                    <TableCell sx={{ fontSize: '22px' }} align="left"><h6>Thời gian khởi hành</h6></TableCell>
+                                    <TableCell sx={{ fontSize: '22px' }} align="left"><h6>Điểm đi</h6></TableCell>
+                                    <TableCell sx={{ fontSize: '22px' }} align="left"><h6>Điểm đến</h6></TableCell>
+                                    <TableCell sx={{ fontSize: '22px' }} align="left"><h6>Các bus đang vận hành</h6></TableCell>
+                                    <TableCell sx={{ fontSize: '22px' }} align="left"><h6>Tổng số vé</h6></TableCell>
+                                    <TableCell sx={{ fontSize: '22px' }} align="left"><h6>Số vé bán được</h6></TableCell>
+                                    <TableCell sx={{ fontSize: '22px' }} align="left"><h6>Doanh thu</h6></TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {filterRows.map((row) => (
+                                {results.map((row, index) => (
                                     <TableRow
-                                        key={row.name}
-                                        sx={{ '&:last-child td, &:last-child th': { boder: 0 } }}>
-                                        <TableCell component="th" scope="row">
-                                            {row.fromLocation}
-                                        </TableCell>
-                                        <TableCell align="left">{row.toLocation}</TableCell>
-                                        <TableCell align="right">{row.date}</TableCell>
-                                        <TableCell align="right">{row.timeStart}</TableCell>
-                                        <TableCell align="right">{row.totalTickets}</TableCell>
-                                        <TableCell align="right">{row.ticketsPurchased}</TableCell>
-                                        <TableCell align="right">{row.unitPrice}</TableCell>
-                                        <TableCell align="right">{row.revenue}</TableCell>
+                                        key={index}
+                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    >
+                                        <TableCell align="center">{row.busRouteId}</TableCell>
+                                        <TableCell align="left">{row.departureTime}</TableCell>
+                                        <TableCell align="left">{row.departure}</TableCell>
+                                        <TableCell align="left">{row.destination}</TableCell>
+                                        <TableCell align="center">{row.busIds}</TableCell>
+                                        <TableCell align="center">{row.totalTickets}</TableCell>
+                                        <TableCell align="center">{row.soldTickets}</TableCell>
+                                        <TableCell align="left">{row.totalRevenue.toLocaleString()} VNĐ</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -139,7 +199,7 @@ const ReportScreen = () => {
                 {/* SUM OF REVENUE */}
                 <h4
                     style={{ marginTop: 25, marginRight: 30, textAlign: 'right' }}>
-                    Tổng doanh thu: {totalRevenue}</h4>
+                    Tổng doanh thu: {calculateTotalRevenue().toLocaleString()} VNĐ</h4>
 
             </div>
         </div>

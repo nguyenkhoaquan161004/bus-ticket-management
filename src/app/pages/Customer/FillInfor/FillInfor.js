@@ -35,18 +35,18 @@ const FillInfor = () => {
   const locationFromTo = location.state?.location;
   const totalCost = useMemo(() => {
     if (!isRoundTrip) {
-      return costTicketOutbound - (discountPercent / 100) * costTicketOutbound;
-    } else {
       return sumOfCost - (discountPercent / 100) * sumOfCost;
+    } else {
+      return costTicketOutbound - (discountPercent / 100) * costTicketOutbound;
     }
   }, [isRoundTrip, discountPercent, costTicketOutbound, costTicketReturn]);
   const costPerSet = totalCost / selectedSeats.ids.length;
 
   const [bookingData, setBookingData] = useState({
-    BusBusRouteID: selectedTrip.busBusRouteID,
+    BusBusRouteID: selectedTrip.busBusRouteID || selectedTrip[0].busBusRouteID,
     CustomerID: parseInt(localStorage.getItem("accountId")),
     SeatNum: selectedSeats.ids.join(","),
-    Type: selectedTrip.bus.type,
+    Type: selectedTrip?.bus?.type || selectedTrip?.[0]?.bus?.type,
     Price: costPerSet,
   });
   const handleSelectedPromotion = async () => {
@@ -54,7 +54,7 @@ const FillInfor = () => {
       alert("Vui lòng nhập mã khuyến mãi");
       return;
     }
-    console.log("Selected Promotion:", selectedPromotion); // Kiểm tra giá trị của mã khuyến mãi
+    console.log("Selected Promotion:", selectedPromotion);
     try {
       const response = await axios.get(
         "http://localhost:5278/api/payment/promo",
@@ -81,7 +81,7 @@ const FillInfor = () => {
     try {
       const response = await axios.get("http://localhost:5278/api/payment", {
         params: {
-          busBusRouteId: selectedTrip.busBusRouteID,
+          busBusRouteId: selectedTrip[0].busBusRouteID,
           customerId: parseInt(localStorage.getItem("accountId")),
         },
       });
@@ -237,7 +237,7 @@ const FillInfor = () => {
                     <h5>Giá lượt đi:</h5>
                     <p className="uiRegular">{costTicketOutbound}VND</p>
                   </div>
-                  {isRoundTrip && (
+                  {!isRoundTrip && (
                     <div className={styles.itemDetails}>
                       <h5>Giá lượt về:</h5>
                       <p className="uiRegular">{costTicketReturn}VND</p>

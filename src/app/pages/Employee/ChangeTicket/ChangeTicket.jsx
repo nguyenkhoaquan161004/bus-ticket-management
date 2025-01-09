@@ -12,7 +12,7 @@ const ChangeTicket = () => {
                 <div className={styles.buyTicketSpace}>
                     <h3 style={{ textAlign: "center" }}>ĐỔI VÉ</h3>
                     <BuyTicket
-                        isRoundTripFiding></BuyTicket>
+                       toggleChangeTicket ></BuyTicket>
                 </div>
 
             </div>

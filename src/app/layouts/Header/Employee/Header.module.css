@@ -7,7 +7,7 @@
     z-index: 5;
     
     background: linear-gradient(180deg, #92C3BE 0%, #92C3BE 38.5%, rgba(146, 195, 190, 0) 100%);
-    backdrop-filter: blur(25px);
+    /* backdrop-filter: blur(25px); */
 }
 
 .headerFlexBox nav button,
