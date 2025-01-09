@@ -41,11 +41,13 @@ const AddAccount = ({ isOpen, onClose, onAddAccount }) => {
       name: fullname,
       gender: sex,
       phoneNumber: phone,
-      address: "Unknown",
       password,
       userName: email,
       userType: role,
       status: status,
+      licenseNumber: "string",
+      address: "string",
+      hireDate: "2025-01-09",
     };
 
     try {
@@ -62,11 +64,13 @@ const AddAccount = ({ isOpen, onClose, onAddAccount }) => {
       }
     } catch (error) {
       console.error("Error adding account:", error);
-      alert("Đã xảy ra lỗi!");
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        alert(`Đã xảy ra lỗi: ${error}`);
+      } else {
+        alert("Đã xảy ra lỗi!");
+      }
     }
-
-    onAddAccount(newAccount);
-    onClose();
   };
 
   if (!isOpen) return null;
@@ -132,8 +136,9 @@ const AddAccount = ({ isOpen, onClose, onAddAccount }) => {
                       textAlign: "left",
                     }}
                   >
-                    <MenuItem value={"Khách hàng"}>Khách hàng</MenuItem>
-                    <MenuItem value={"Nhân viên"}>Nhân viên</MenuItem>
+                    <MenuItem value={"Customer"}>Customer</MenuItem>
+                    <MenuItem value={"TicketClerk"}>TicketClerk</MenuItem>
+                    <MenuItem value={"Driver"}>Driver</MenuItem>
                   </Select>
                 </FormControl>
               </div>

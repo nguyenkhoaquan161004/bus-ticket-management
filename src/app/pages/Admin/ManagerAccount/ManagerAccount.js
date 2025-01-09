@@ -88,10 +88,18 @@ const ManagerAccount = () => {
       setFilteredRows(accounts);
     } else if (value === "Customer") {
       // Lọc danh sách để chỉ hiển thị "Khách hàng"
-      setFilteredRows(accounts.filter((row) => row.role === "Customer"));
+      setFilteredRows(
+        accounts.filter(
+          (row) => row.role === "Customer" || row.role === "Khách Hàng"
+        )
+      );
     } else if (value === "Employee") {
       // Lọc danh sách để chỉ hiển thị "Nhân viên"
-      setFilteredRows(accounts.filter((row) => row.role != "Customer"));
+      setFilteredRows(
+        accounts.filter(
+          (row) => row.role != "Customer" && row.role != "Khách Hàng"
+        )
+      );
     }
   };
 
@@ -151,7 +159,7 @@ const ManagerAccount = () => {
     alert("Cập nhật tài khoản thành công.");
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     if (selectedRowIds.length === 0) {
       alert("Vui lòng chọn ít nhất một tài khoản để xóa.");
       return;
@@ -161,12 +169,23 @@ const ManagerAccount = () => {
       "Bạn có chắc muốn xóa tài khoản này không?"
     );
     if (isConfirmed) {
-      setFilteredRows((prevRows) =>
-        prevRows.filter((row) => !selectedRowIds.includes(row.id))
-      );
+      try {
+        await Promise.all(
+          selectedRowIds.map(async (id) => {
+            await axios.delete(`http://localhost:5278/api/Account/${id}`);
+          })
+        );
+
+        setFilteredRows((prevRows) =>
+          prevRows.filter((row) => !selectedRowIds.includes(row.id))
+        );
+        setSelectedRowIds([]);
+        alert("Tài khoản đã xóa thành công.");
+      } catch (error) {
+        console.error("Error deleting accounts:", error);
+        alert("Đã xảy ra lỗi khi xóa tài khoản.");
+      }
     }
-    setSelectedRowIds([]);
-    alert("Tài khoản đã xóa thành công.");
   };
 
   return (
@@ -287,7 +306,6 @@ const ManagerAccount = () => {
           isOpen={isUpdateAccountOpen}
           onClose={handleCloseUpdateAccountButtonClick}
           onUpdateAccount={updateAccount}
-          selectedRow={selectedRowId}
         ></UpdateAccount>
       )}
     </div>
